@@ -88,13 +88,13 @@ function addAllPostcodes(state, targetSet) {
 Promise.all([
   fetch('postcode2name.json').then(r => r.json()),
   Promise.all([
-    "geo_chunk_0.json", "geo_chunk_1.json", "geo_chunk_2.json", "geo_chunk_3.json", 
-    "geo_chunk_4.json", "geo_chunk_5.json", "geo_chunk_6.json", "geo_chunk_7.json",
-    "geo_chunk_8.json", "geo_chunk_9.json", "geo_chunk_10.json", "geo_chunk_11.json",
-    "geo_chunk_12.json", "geo_chunk_13.json", "geo_chunk_14.json", "geo_chunk_15.json",
-    "geo_chunk_16.json", "geo_chunk_17.json", "geo_chunk_18.json", "geo_chunk_19.json",
-    "geo_chunk_20.json", "geo_chunk_21.json", "geo_chunk_22.json", "geo_chunk_23.json",
-    "geo_chunk_24.json", "geo_chunk_25.json", "geo_chunk_26.json"
+    "data/geo_chunk_0.json", "data/geo_chunk_1.json", "data/geo_chunk_2.json", "data/geo_chunk_3.json", 
+    "data/geo_chunk_4.json", "data/geo_chunk_5.json", "data/geo_chunk_6.json", "data/geo_chunk_7.json",
+    "data/geo_chunk_8.json", "data/geo_chunk_9.json", "data/geo_chunk_10.json", "data/geo_chunk_11.json",
+    "data/geo_chunk_12.json", "data/geo_chunk_13.json", "data/geo_chunk_14.json", "data/geo_chunk_15.json",
+    "data/geo_chunk_16.json", "data/geo_chunk_17.json", "data/geo_chunk_18.json", "data/geo_chunk_19.json",
+    "data/geo_chunk_20.json", "data/geo_chunk_21.json", "data/geo_chunk_22.json", "data/geo_chunk_23.json",
+    "data/geo_chunk_24.json", "data/geo_chunk_25.json", "data/geo_chunk_26.json"
   ].map(file => fetch(file).then(r => r.json()))
   ).then(chunks => {
     const allFeatures = [];
