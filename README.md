@@ -5,15 +5,16 @@ Interactive map showing eligible work areas for Australian Working Holiday visa 
 ## 🌐 Live Sites
 
 - **Production**: https://chanyub.github.io/88days_map/
-- **Staging Preview**: Use GitHub's file preview for staging branch
-  1. Go to [staging branch](https://github.com/chanyub/88days_map/tree/stg)
-  2. Click on `index.html` 
-  3. Click "Preview" or use [HTMLPreview](http://htmlpreview.github.io/?https://github.com/chanyub/88days_map/blob/stg/index.html)
+- **Staging Demo**: Test `stg` branch locally
+  1. Clone the repository: `git clone https://github.com/chanyub/88days_map.git`
+  2. Switch to staging: `git checkout stg`
+  3. Run local server: `python -m http.server 8000` or `npx serve .`
+  4. Open: `http://localhost:8000`
 
 ## 🚀 Development Workflow
 
 1. **Development**: Make changes in `stg` branch
-2. **Testing**: Preview using GitHub's file preview or HTMLPreview.github.io
+2. **Testing**: Run local server to test staging changes
 3. **Production**: Create PR from `stg` to `main` → Auto-deploy via GitHub Actions
 
 ## ✨ Features
