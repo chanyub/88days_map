@@ -37,12 +37,21 @@
     #chat-content{display:none;max-height:200px;border:1px solid #ddd;border-top:none}
     #chat-messages{height:150px;overflow-y:auto;padding:8px;background:white}
     .message{margin:4px 0;padding:4px 6px;background:#f8f9fa;border-radius:4px;word-wrap:break-word}
-    .message-time{font-size:10px;color:#666;margin-left:4px}
-    #chat-input-container{padding:8px;background:#f5f5f5;border-radius:0 0 8px 8px;display:flex;gap:5px}
+    .message-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+    .message-author{font-weight:bold;color:#333;font-size:11px}
+    .message-time{font-size:10px;color:#666}
+    .message-text{font-size:11px;line-height:1.3}
+    #chat-input-container{padding:8px;background:#f5f5f5;border-radius:0 0 8px 8px}
+    .input-row{display:flex;gap:5px;margin-bottom:5px}
+    #username-input{width:80px;padding:4px;border:1px solid #ddd;border-radius:3px;font-size:11px}
     #chat-input{flex:1;padding:4px;border:1px solid #ddd;border-radius:3px;font-size:11px}
     #chat-send{padding:4px 8px;background:#4a90e2;color:white;border:none;border-radius:3px;cursor:pointer;font-size:11px}
     #chat-send:hover{background:#357abd}
     .chat-collapsed{opacity:0.8}
+    #creator-info{position:absolute;bottom:10px;right:130px;z-index:1000;background:rgba(255,255,255,0.9);padding:6px 8px;border-radius:5px;font-size:10px;font-family:Arial,sans-serif;color:#666;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+    #creator-info a{color:#4a90e2;text-decoration:none;margin:0 2px}
+    #creator-info a:hover{text-decoration:underline}
+    .creator-line{margin:1px 0}
   </style>
 </head>
 <body>
@@ -120,13 +129,21 @@
   <div class="stat-line">Today's Visitors: <span id="today-visitors">0</span></div>
 </div>
 
+<div id="creator-info">
+  <div class="creator-line">📍 Created by <strong>하고싶은게많은🇰🇷</strong></div>
+  <div class="creator-line">📧 <a href="#" onclick="copyEmail(event)">Contact</a> | 📺 <a href="https://www.youtube.com/@%ED%95%98%EA%B3%A0%EC%8B%B6%EC%9D%80%EA%B2%8C%EB%A7%8E%EC%9D%80" target="_blank">YouTube</a></div>
+</div>
+
 <div id="chat-container" class="chat-collapsed">
   <div id="chat-header" onclick="toggleChat()">💬 Guestbook</div>
   <div id="chat-content">
     <div id="chat-messages"></div>
     <div id="chat-input-container">
-      <input type="text" id="chat-input" placeholder="Leave a message..." maxlength="200">
-      <button id="chat-send" onclick="sendMessage()">Send</button>
+      <div class="input-row">
+        <input type="text" id="username-input" placeholder="Name" maxlength="20">
+        <input type="text" id="chat-input" placeholder="Leave a message..." maxlength="200">
+      </div>
+      <button id="chat-send" onclick="sendMessage()" style="width:100%;margin-top:2px;">Send</button>
     </div>
   </div>
 </div>
@@ -479,6 +496,12 @@ function initChat() {
       sendMessage();
     }
   });
+  
+  document.getElementById('username-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      document.getElementById('chat-input').focus();
+    }
+  });
 }
 
 function toggleChat() {
@@ -496,14 +519,20 @@ function toggleChat() {
 
 function sendMessage() {
   const input = document.getElementById('chat-input');
+  const usernameInput = document.getElementById('username-input');
   const message = input.value.trim();
+  const username = usernameInput.value.trim() || 'Anonymous';
   
   if (message) {
     const timestamp = new Date().toLocaleString();
     const messageObj = {
       text: message,
+      author: username,
       time: timestamp
     };
+    
+    // 사용자명을 로컬 스토리지에 저장 (다음에 자동 입력)
+    localStorage.setItem('guestbookUsername', username);
     
     // 로컬 스토리지에 저장
     const messages = getMessages();
@@ -519,7 +548,7 @@ function sendMessage() {
     // 화면에 표시
     addMessageToChat(messageObj);
     
-    // 입력창 비우기
+    // 메시지 입력창만 비우기 (사용자명은 유지)
     input.value = '';
     
     // 스크롤을 아래로
@@ -538,6 +567,12 @@ function loadMessages() {
   const container = document.getElementById('chat-messages');
   
   container.innerHTML = '';
+  
+  // 저장된 사용자명 불러오기
+  const savedUsername = localStorage.getItem('guestbookUsername');
+  if (savedUsername) {
+    document.getElementById('username-input').value = savedUsername;
+  }
   
   if (messages.length === 0) {
     container.innerHTML = '<div style="color:#999;text-align:center;padding:20px;">No messages yet. Be the first to leave a message!</div>';
@@ -558,8 +593,11 @@ function addMessageToChat(messageObj) {
   }
   
   messageDiv.innerHTML = `
-    <div>${escapeHtml(messageObj.text)}</div>
-    <div class="message-time">${messageObj.time}</div>
+    <div class="message-header">
+      <div class="message-author">${escapeHtml(messageObj.author || 'Anonymous')}</div>
+      <div class="message-time">${messageObj.time}</div>
+    </div>
+    <div class="message-text">${escapeHtml(messageObj.text)}</div>
   `;
   
   container.appendChild(messageDiv);
@@ -570,6 +608,79 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+/* 8. 이메일 복사 기능 */
+function copyEmail(event) {
+  event.preventDefault();
+  const email = 'somanytube@gmail.com';
+  
+  // 클립보드에 복사
+  navigator.clipboard.writeText(email).then(function() {
+    // 복사 성공 메시지 표시
+    showCopyMessage('📧 Email copied to clipboard!');
+  }).catch(function() {
+    // 대체 방법 (구련 브라우저)
+    const textArea = document.createElement('textarea');
+    textArea.value = email;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    showCopyMessage('📧 Email copied to clipboard!');
+  });
+}
+
+function showCopyMessage(message) {
+  // 기존 메시지가 있으면 제거
+  const existingMsg = document.getElementById('copy-message');
+  if (existingMsg) {
+    existingMsg.remove();
+  }
+  
+  // 메시지 엘리먼트 생성
+  const messageDiv = document.createElement('div');
+  messageDiv.id = 'copy-message';
+  messageDiv.textContent = message;
+  messageDiv.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(74, 144, 226, 0.9);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: fadeInOut 2s ease-in-out;
+  `;
+  
+  // CSS 애니메이션 추가
+  if (!document.getElementById('copy-animation-style')) {
+    const style = document.createElement('style');
+    style.id = 'copy-animation-style';
+    style.textContent = `
+      @keyframes fadeInOut {
+        0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  document.body.appendChild(messageDiv);
+  
+  // 2초 후 자동 제거
+  setTimeout(() => {
+    if (messageDiv.parentNode) {
+      messageDiv.remove();
+    }
+  }, 2000);
 }
 </script>
 </body>
