@@ -88,12 +88,16 @@ function addAllPostcodes(state, targetSet) {
 Promise.all([
   fetch('postcode2name.json').then(r => r.json()),
   fetch('https://github.com/chanyub/88days_map/releases/download/v1.0.0/poa2021.geojson', {
-    redirect: 'follow',
-    mode: 'cors'
+    redirect: 'follow'
   }).then(r => {
-    console.log('Response status:', r.status, 'Content-Type:', r.headers.get('content-type'));
-    if (!r.ok) throw new Error('Failed to fetch geojson: ' + r.status);
+    console.log('GeoJSON fetch - Status:', r.status, 'OK:', r.ok, 'Type:', r.headers.get('content-type'));
+    if (!r.ok) {
+      throw new Error('GeoJSON fetch failed with status: ' + r.status);
+    }
     return r.json();
+  }).catch(error => {
+    console.error('GeoJSON fetch error:', error);
+    throw error;
   }),
   fetch('table1.csv').then(r => r.text()),
   fetch('table2.csv').then(r => r.text()),
@@ -174,7 +178,10 @@ Promise.all([
   setupSearch();
   initVisitorStats();
 })
-.catch(err => alert('로딩 실패: ' + err));
+.catch(err => {
+  console.error('전체 로딩 실패:', err);
+  alert('로딩 실패: ' + err.message);
+});
 
 /* 5. 방문자 통계 기능 */
 function initVisitorStats() {
