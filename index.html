@@ -28,9 +28,28 @@
     .info-content{line-height:1.5}
     .close-btn{float:right;cursor:pointer;font-size:18px;color:#666}
     .close-btn:hover{color:#000}
+    #loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;display:flex;justify-content:center;align-items:center;color:white;font-family:Arial,sans-serif}
+    .spinner{border:4px solid #f3f3f3;border-top:4px solid #3498db;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin-right:15px}
+    @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    .loading-text{font-size:18px}
+    #chat-container{position:absolute;bottom:10px;left:10px;z-index:1000;width:300px;background:rgba(255,255,255,0.95);border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.3);font-family:Arial,sans-serif;font-size:12px}
+    #chat-header{background:#4a90e2;color:white;padding:8px 12px;border-radius:8px 8px 0 0;font-weight:bold;cursor:pointer;user-select:none}
+    #chat-content{display:none;max-height:200px;border:1px solid #ddd;border-top:none}
+    #chat-messages{height:150px;overflow-y:auto;padding:8px;background:white}
+    .message{margin:4px 0;padding:4px 6px;background:#f8f9fa;border-radius:4px;word-wrap:break-word}
+    .message-time{font-size:10px;color:#666;margin-left:4px}
+    #chat-input-container{padding:8px;background:#f5f5f5;border-radius:0 0 8px 8px;display:flex;gap:5px}
+    #chat-input{flex:1;padding:4px;border:1px solid #ddd;border-radius:3px;font-size:11px}
+    #chat-send{padding:4px 8px;background:#4a90e2;color:white;border:none;border-radius:3px;cursor:pointer;font-size:11px}
+    #chat-send:hover{background:#357abd}
+    .chat-collapsed{opacity:0.8}
   </style>
 </head>
 <body>
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading map data...</div>
+</div>
 <div id="search-container">
   <input type="text" id="search-input" placeholder="Search postcode or locality">
   <div id="search-results"></div>
@@ -99,6 +118,17 @@
 <div id="visitor-stats">
   <div class="stat-line">Total Visitors: <span id="total-visitors">0</span></div>
   <div class="stat-line">Today's Visitors: <span id="today-visitors">0</span></div>
+</div>
+
+<div id="chat-container" class="chat-collapsed">
+  <div id="chat-header" onclick="toggleChat()">💬 Guestbook</div>
+  <div id="chat-content">
+    <div id="chat-messages"></div>
+    <div id="chat-input-container">
+      <input type="text" id="chat-input" placeholder="Leave a message..." maxlength="200">
+      <button id="chat-send" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
 </div>
 
 <div id="map"></div>
@@ -178,12 +208,12 @@ Promise.all([
     chunks.forEach(chunk => allFeatures.push(...chunk.features));
     return { type: 'FeatureCollection', features: allFeatures };
   }),
-  fetch('table1.csv').then(r => r.text()),
-  fetch('table2.csv').then(r => r.text()),
-  fetch('table3.csv').then(r => r.text()),
-  fetch('table4.csv').then(r => r.text()),
-  fetch('table5.csv').then(r => r.text()),
-  fetch('table6.csv').then(r => r.text())
+  fetch('data/table1.csv').then(r => r.text()),
+  fetch('data/table2.csv').then(r => r.text()),
+  fetch('data/table3.csv').then(r => r.text()),
+  fetch('data/table4.csv').then(r => r.text()),
+  fetch('data/table5.csv').then(r => r.text()),
+  fetch('data/table6.csv').then(r => r.text())
 ])
 .then(([nameMap, geo, table1, table2, table3, table4, table5, table6]) => {
   localityTable = nameMap;
@@ -256,6 +286,12 @@ Promise.all([
   
   setupSearch();
   initVisitorStats();
+  
+  // 로딩 완료 후 오버레이 숨기기
+  document.getElementById('loading-overlay').style.display = 'none';
+  
+  // 채팅 초기화
+  initChat();
 })
 .catch(err => {
   console.error('전체 로딩 실패:', err);
@@ -432,6 +468,109 @@ map.on('click', function(e) {
     highlightedLayer = null;
   }
 });
+
+/* 7. 간단한 채팅/방명록 기능 */
+function initChat() {
+  loadMessages();
+  
+  // Enter 키로 메시지 전송
+  document.getElementById('chat-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+}
+
+function toggleChat() {
+  const content = document.getElementById('chat-content');
+  const container = document.getElementById('chat-container');
+  
+  if (content.style.display === 'none' || content.style.display === '') {
+    content.style.display = 'block';
+    container.classList.remove('chat-collapsed');
+  } else {
+    content.style.display = 'none';
+    container.classList.add('chat-collapsed');
+  }
+}
+
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  
+  if (message) {
+    const timestamp = new Date().toLocaleString();
+    const messageObj = {
+      text: message,
+      time: timestamp
+    };
+    
+    // 로컬 스토리지에 저장
+    const messages = getMessages();
+    messages.push(messageObj);
+    
+    // 최대 50개 메시지만 유지
+    if (messages.length > 50) {
+      messages.splice(0, messages.length - 50);
+    }
+    
+    localStorage.setItem('guestbookMessages', JSON.stringify(messages));
+    
+    // 화면에 표시
+    addMessageToChat(messageObj);
+    
+    // 입력창 비우기
+    input.value = '';
+    
+    // 스크롤을 아래로
+    const messagesContainer = document.getElementById('chat-messages');
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+}
+
+function getMessages() {
+  const stored = localStorage.getItem('guestbookMessages');
+  return stored ? JSON.parse(stored) : [];
+}
+
+function loadMessages() {
+  const messages = getMessages();
+  const container = document.getElementById('chat-messages');
+  
+  container.innerHTML = '';
+  
+  if (messages.length === 0) {
+    container.innerHTML = '<div style="color:#999;text-align:center;padding:20px;">No messages yet. Be the first to leave a message!</div>';
+  } else {
+    messages.forEach(msg => addMessageToChat(msg));
+    container.scrollTop = container.scrollHeight;
+  }
+}
+
+function addMessageToChat(messageObj) {
+  const container = document.getElementById('chat-messages');
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message';
+  
+  // 첫 번째 메시지인 경우 환영 메시지 제거
+  if (container.querySelector('[style*="color:#999"]')) {
+    container.innerHTML = '';
+  }
+  
+  messageDiv.innerHTML = `
+    <div>${escapeHtml(messageObj.text)}</div>
+    <div class="message-time">${messageObj.time}</div>
+  `;
+  
+  container.appendChild(messageDiv);
+}
+
+// HTML 이스케이프 함수
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
 </script>
 </body>
 </html>
