@@ -1,88 +1,71 @@
-# Australia Postcode Map Visualization
+# 88 Days Map - Working Holiday Visa Areas
 
-An interactive map displaying Australian postcodes with color-coded regions based on different classification tables. Users can search for specific postcodes or localities and explore the geographical distribution of postal areas.
+Interactive map showing eligible work areas for Australian Working Holiday visa holders to complete their 88-day requirement.
 
-## Features
+## 🌐 Live Sites
 
-- **Interactive Map**: Browse Australian postcodes with Leaflet.js
-- **Color-coded Regions**: Different tables are represented by distinct colors:
-  - Table 1: Red (#ff0000)
-  - Table 2: Orange (#ff8c00)
-  - Table 3: Yellow (#ffff00)
-  - Table 4: Lime Green (#32cd32)
-  - Table 5: Blue (#0078ff)
-  - Table 6: Purple (#9370db)
-- **Search Functionality**: Search by postcode or locality name
-- **Click Interaction**: Click on regions to highlight them with darker colors
-- **Visitor Statistics**: Track total and daily visitor counts
+- **Production**: https://chanyub.github.io/88days_map/
+- **Staging Preview**: Use GitHub's file preview for staging branch
+  1. Go to [staging branch](https://github.com/chanyub/88days_map/tree/stg)
+  2. Click on `index.html` 
+  3. Click "Preview" or use [HTMLPreview](http://htmlpreview.github.io/?https://github.com/chanyub/88days_map/blob/stg/index.html)
 
-## Live Demo
+## 🚀 Development Workflow
 
-[View Live Demo](https://chanyub.github.io/88days_map/)
+1. **Development**: Make changes in `stg` branch
+2. **Testing**: Preview using GitHub's file preview or HTMLPreview.github.io
+3. **Production**: Create PR from `stg` to `main` → Auto-deploy via GitHub Actions
 
-## Usage
+## ✨ Features
 
-1. Open `index.html` in a web browser
-2. Use the search bar at the top to find specific postcodes or localities
-3. Click on any region to highlight it
-4. Click on empty areas to deselect highlighted regions
+- **Interactive Map**: Australian postcode areas with color-coded work eligibility
+- **Search Function**: Find postcodes and localities quickly
+- **Information Panels**: Detailed work requirements for each area type
+- **Guestbook**: Leave messages with username support
+- **Visitor Statistics**: Track site usage with local storage
+- **Loading Indicator**: Smooth data loading experience
+- **Creator Contact**: Easy email copy and YouTube channel access
 
-## Data Sources
+## 📊 Work Area Categories
 
-- **Postcode Boundaries**: Australian Bureau of Statistics POA 2021 GeoJSON data
-- **Classification Tables**: Six CSV files (table1.csv - table6.csv) containing postcode classifications
-- **Locality Names**: Postcode to locality name mappings in JSON format
+1. **Remote/Very Remote Australia (Red)**: Tourism and hospitality work from 22 June 2021
+2. **Australia (Orange)**: Tourism and hospitality work from 22 June 2021 (applications from 1 July 2022)
+3. **Northern Australia (Yellow)**: Tourism and hospitality work from 22 June 2021
+4. **Regional Australia (Green)**: Specified work (primary industries)
+5. **Bushfire Declared Areas (Blue)**: Bushfire recovery work after 31 July 2019
+6. **Natural Disaster Areas (Purple)**: Natural disaster recovery work from 31 Dec 2021
 
-## File Structure
+## 📂 File Structure
 
 ```
-├── index.html              # Main application file
-├── poa2021.geojson         # Australian postcode boundary data
-├── postcode2name.json      # Postcode to locality name mapping
-├── table1.csv             # Classification table 1 (Red)
-├── table2.csv             # Classification table 2 (Orange)
-├── table3.csv             # Classification table 3 (Yellow)
-├── table4.csv             # Classification table 4 (Lime Green)
-├── table5.csv             # Classification table 5 (Blue)
-└── table6.csv             # Classification table 6 (Purple)
+├── index.html              # Main application
+├── postcode2name.json      # Postcode to locality mapping
+├── data/
+│   ├── geo_chunk_*.json    # Geospatial data (27 chunks)
+│   └── table*.csv          # Work area classifications
+└── .github/workflows/
+    └── deploy.yml          # Auto-deployment workflow
 ```
 
-## Technologies Used
+## 🛠 Technologies
 
-- **Leaflet.js**: Interactive mapping library
-- **OpenStreetMap**: Base map tiles
-- **HTML5/CSS3/JavaScript**: Frontend technologies
-- **LocalStorage**: Client-side visitor statistics
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Mapping**: Leaflet.js
+- **Data**: GeoJSON, CSV
+- **Storage**: LocalStorage for user preferences
+- **Deployment**: GitHub Pages via GitHub Actions
 
-## Installation
+## 📧 Contact
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/chanyub/88days_map.git
-   ```
+Created by **하고싶은게많은🇰🇷**
+- Email: somanytube@gmail.com  
+- YouTube: [하고싶은게많은](https://www.youtube.com/@%ED%95%98%EA%B3%A0%EC%8B%B6%EC%9D%80%EA%B2%8C%EB%A7%8E%EC%9D%80)
 
-2. Open `index.html` in a web browser - no server required!
+## 📋 Data Sources
 
-## Browser Compatibility
+Official information from the Australian Department of Home Affairs:
+- [Specified Work Requirements](https://immi.homeaffairs.gov.au/what-we-do/whm-program/specified-work-conditions/specified-work-417)
 
-- Chrome (recommended)
-- Firefox
-- Safari
-- Edge
+---
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## Acknowledgments
-
-- Australian Bureau of Statistics for postcode boundary data
-- OpenStreetMap contributors for base map tiles
-- Leaflet.js community for the mapping library
+> **Note**: This tool is for informational purposes only. Always verify current requirements with official government sources.
