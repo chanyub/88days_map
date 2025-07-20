@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Postcode Polygons (POA 2021)</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    html,body,#map{height:100%;margin:0}
+    #search-container{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:white;padding:10px;border-radius:5px;box-shadow:0 2px 5px rgba(0,0,0,0.2)}
+    #search-input{padding:5px;width:200px;border:1px solid #ccc;border-radius:3px}
+    #search-results{max-height:200px;overflow-y:auto;background:white;border:1px solid #ccc;border-top:none;display:none}
+    .search-result{padding:8px;cursor:pointer;border-bottom:1px solid #eee}
+    .search-result:hover{background:#f0f0f0}
+    #visitor-stats{position:absolute;bottom:10px;right:10px;z-index:1000;background:rgba(255,255,255,0.9);padding:8px;border-radius:5px;font-size:12px;font-family:Arial,sans-serif}
+    .stat-line{margin:2px 0}
+  </style>
+</head>
+<body>
+<div id="search-container">
+  <input type="text" id="search-input" placeholder="Search postcode or locality">
+  <div id="search-results"></div>
+</div>
+<div id="visitor-stats">
+  <div class="stat-line">Total Visitors: <span id="total-visitors">0</span></div>
+  <div class="stat-line">Today's Visitors: <span id="today-visitors">0</span></div>
+</div>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* 1. 지도 */
+const map = L.map('map').setView([-27, 133], 5);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:'© OpenStreetMap contributors'
+}).addTo(map);
+
+/* 2. POA 폴리곤 불러오기 */
+let localityTable = {}; // postcode → locality
+let geoLayer; // 검색을 위해 저장
+let highlightedLayer = null; // 현재 강조된 레이어
+let table1Postcodes = new Set(); // table 1 (빨간색)
+let table2Postcodes = new Set(); // table 2 (주황색)
+let table3Postcodes = new Set(); // table 3 (노란색)
+let table4Postcodes = new Set(); // table 4 (초록색)
+let table5Postcodes = new Set(); // table 5 (파란색)
+let table6Postcodes = new Set(); // table 6 (보라색)
+
+// CSV 파일들에서 우편번호 파싱
+function parsePostcodes(postcodeStr) {
+  const postcodes = [];
+  const parts = postcodeStr.split(',').map(s => s.trim());
+  
+  for (let part of parts) {
+    if (part.includes(' to ')) {
+      const [start, end] = part.split(' to ').map(s => parseInt(s.trim()));
+      for (let i = start; i <= end; i++) {
+        postcodes.push(i.toString());
+      }
+    } else {
+      postcodes.push(part);
+    }
+  }
+  return postcodes;
+}
+
+// 전체 주/테리토리 우편번호 추가 함수
+function addAllPostcodes(state, targetSet) {
+  if (state.includes('Northern Territory') || state.includes('ACT')) {
+    for (let i = 800; i <= 999; i++) {
+      targetSet.add('0' + i);
+    }
+    for (let i = 200; i <= 299; i++) {
+      targetSet.add('0' + i);
+    }
+  } else if (state.includes('South Australia')) {
+    for (let i = 5000; i <= 5999; i++) {
+      targetSet.add(i.toString());
+    }
+  } else if (state.includes('Tasmania')) {
+    for (let i = 7000; i <= 7999; i++) {
+      targetSet.add(i.toString());
+    }
+  } else if (state.includes('Norfolk Island')) {
+    targetSet.add('2899');
+  }
+}
+
+Promise.all([
+  fetch('postcode2name.json').then(r => r.json()),
+  fetch('https://github.com/chanyub/88days_map/releases/download/v1.0.0/poa2021.geojson').then(r => {
+    if (!r.ok) throw new Error('geojson 404');
+    return r.json();
+  }),
+  fetch('table1.csv').then(r => r.text()),
+  fetch('table2.csv').then(r => r.text()),
+  fetch('table3.csv').then(r => r.text()),
+  fetch('table4.csv').then(r => r.text()),
+  fetch('table5.csv').then(r => r.text()),
+  fetch('table6.csv').then(r => r.text())
+])
+.then(([nameMap, geo, table1, table2, table3, table4, table5, table6]) => {
+  localityTable = nameMap;
+  
+  // 각 테이블에서 우편번호 추출
+  const tableSets = [table1Postcodes, table2Postcodes, table3Postcodes, table4Postcodes, table5Postcodes, table6Postcodes];
+  const csvFiles = [table1, table2, table3, table4, table5, table6];
+  
+  csvFiles.forEach((csvText, tableIndex) => {
+    const lines = csvText.split('\n').slice(1);
+    lines.forEach(line => {
+      if (line.trim()) {
+        const firstCommaIndex = line.indexOf(',');
+        if (firstCommaIndex > 0) {
+          const state = line.substring(0, firstCommaIndex).trim();
+          const postcodes = line.substring(firstCommaIndex + 1).trim().replace(/"/g, '');
+          
+          if (postcodes && !postcodes.includes('All') && postcodes !== 'All areas.') {
+            const codes = postcodes.split(',').map(s => s.trim()).filter(s => s);
+            codes.forEach(code => tableSets[tableIndex].add(code));
+          } else if (postcodes && (postcodes.includes('All') || postcodes === 'All areas.')) {
+            addAllPostcodes(state, tableSets[tableIndex]);
+          }
+        }
+      }
+    });
+  });
+  
+  // 색상 정의
+  const tableColors = ['#ff0000', '#ff8c00', '#ffff00', '#32cd32', '#0078ff', '#9370db']; // 빨강, 주황, 노랑, 라임그린, 파랑, 보라
+  
+  geoLayer = L.geoJSON(geo, {
+    style: (feature) => {
+      const pcode = feature.properties.POA_CODE_2021;
+      
+      // 각 테이블 순서대로 확인
+      for (let i = 0; i < tableSets.length; i++) {
+        if (tableSets[i].has(pcode)) {
+          return { color: tableColors[i], weight: 1, fillOpacity: 0.5 };
+        }
+      }
+      
+      // 어떤 테이블에도 없으면 기본 파란색
+      return { color: '#87ceeb', weight: 1, fillOpacity: 0.3 };
+    },
+    onEachFeature: (feature, layer) => {
+      const pcode = feature.properties.POA_CODE_2021;
+      const name  = localityTable[pcode] || 'Unknown';
+      layer.bindTooltip(`${name}, ${pcode}`, { sticky: true });
+      layer.pcode = pcode;
+      layer.name = name;
+      
+      // 원래 스타일 저장
+      let originalColor = '#87ceeb';
+      for (let i = 0; i < tableSets.length; i++) {
+        if (tableSets[i].has(pcode)) {
+          originalColor = tableColors[i];
+          break;
+        }
+      }
+      layer.originalStyle = { color: originalColor, weight: 1, fillOpacity: 0.5 };
+      
+      // 폴리곤 클릭 이벤트 추가
+      layer.on('click', function(e) {
+        highlightLayer(layer);
+        L.DomEvent.stopPropagation(e);
+      });
+    }
+  }).addTo(map);
+  
+  setupSearch();
+  initVisitorStats();
+})
+.catch(err => alert('로딩 실패: ' + err));
+
+/* 5. 방문자 통계 기능 */
+function initVisitorStats() {
+  const today = new Date().toDateString();
+  
+  // 로컬 스토리지에서 방문자 데이터 가져오기
+  let totalVisitors = parseInt(localStorage.getItem('totalVisitors') || '0');
+  let todayVisitors = parseInt(localStorage.getItem('todayVisitors') || '0');
+  let lastVisitDate = localStorage.getItem('lastVisitDate') || '';
+  
+  // 오늘 첫 방문인지 확인
+  if (lastVisitDate !== today) {
+    todayVisitors = 0;
+    localStorage.setItem('lastVisitDate', today);
+  }
+  
+  // 방문자 수 증가
+  totalVisitors += 1;
+  todayVisitors += 1;
+  
+  // 로컬 스토리지에 저장
+  localStorage.setItem('totalVisitors', totalVisitors.toString());
+  localStorage.setItem('todayVisitors', todayVisitors.toString());
+  
+  // 화면에 표시
+  document.getElementById('total-visitors').textContent = totalVisitors.toLocaleString();
+  document.getElementById('today-visitors').textContent = todayVisitors.toLocaleString();
+}
+
+/* 3. 검색 기능 */
+function setupSearch() {
+  const searchInput = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+  
+  searchInput.addEventListener('input', function() {
+    const query = this.value.trim();
+    if (query.length < 2) {
+      searchResults.style.display = 'none';
+      return;
+    }
+    
+    const results = [];
+    geoLayer.eachLayer(layer => {
+      const pcode = layer.pcode;
+      const name = layer.name;
+      if (pcode.includes(query) || name.toLowerCase().includes(query.toLowerCase())) {
+        results.push({ pcode, name, layer });
+      }
+    });
+    
+    if (results.length > 0) {
+      searchResults.innerHTML = results.slice(0, 10).map(result => 
+        `<div class="search-result" data-pcode="${result.pcode}">${result.name}, ${result.pcode}</div>`
+      ).join('');
+      searchResults.style.display = 'block';
+    } else {
+      searchResults.style.display = 'none';
+    }
+  });
+  
+  searchResults.addEventListener('click', function(e) {
+    if (e.target.classList.contains('search-result')) {
+      const pcode = e.target.dataset.pcode;
+      geoLayer.eachLayer(layer => {
+        if (layer.pcode === pcode) {
+          highlightLayer(layer);
+          map.fitBounds(layer.getBounds());
+          layer.openTooltip();
+        }
+      });
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    }
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#search-container')) {
+      searchResults.style.display = 'none';
+    }
+  });
+}
+
+/* 4. 레이어 강조 기능 */
+function highlightLayer(layer) {
+  // 이전 강조 해제
+  if (highlightedLayer) {
+    highlightedLayer.setStyle(highlightedLayer.originalStyle);
+  }
+  
+  // 원래 색상을 더 진하게 만들어 강조
+  const originalColor = layer.originalStyle.color;
+  const darkerColor = getDarkerColor(originalColor);
+  
+  layer.setStyle({
+    color: darkerColor,
+    weight: 3,
+    fillOpacity: 0.8
+  });
+  
+  highlightedLayer = layer;
+}
+
+// 색상을 더 진하게 만드는 함수
+function getDarkerColor(hexColor) {
+  const colorMap = {
+    '#ff0000': '#cc0000', // 빨간색 -> 더 진한 빨간색
+    '#ff8c00': '#e6660a', // 주황색 -> 더 진한 주황색
+    '#ffff00': '#cccc00', // 노란색 -> 더 진한 노란색
+    '#32cd32': '#228b22', // 라임그린 -> 더 진한 초록색
+    '#0078ff': '#0056cc', // 파란색 -> 더 진한 파란색
+    '#9370db': '#7b68ee', // 보라색 -> 더 진한 보라색
+    '#87ceeb': '#5f9ea0'  // 연한 파란색 -> 더 진한 파란색
+  };
+  
+  return colorMap[hexColor] || hexColor;
+}
+
+// 지도 클릭시 강조 해제
+map.on('click', function(e) {
+  if (highlightedLayer) {
+    highlightedLayer.setStyle(highlightedLayer.originalStyle);
+    highlightedLayer = null;
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# Large data files
+poa2021.geojson
+poa2021.geojson.gz
+
+# Original data files
+ASGS_*.gpkg
+australian_postcodes*.csv
+data_integration.ipynb
+
+# Scripts
+expand_ranges.py
+__.html
