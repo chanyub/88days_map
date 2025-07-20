@@ -41,43 +41,43 @@
   <div class="legend-item" onclick="showInfo(1)">
     <div class="legend-color" style="background:#ff0000"></div>
     <div class="legend-text">
-      <div class="legend-category">Remote/Very Remote (Table 1)</div>
-      <div>Hospitality, Cafe jobs eligible</div>
+      <div class="legend-category">Remote/Very Remote Australia (Table 1)</div>
+      <div>Tourism and hospitality work (from 22 June 2021)</div>
     </div>
   </div>
   <div class="legend-item" onclick="showInfo(2)">
     <div class="legend-color" style="background:#ff8c00"></div>
     <div class="legend-text">
-      <div class="legend-category">Remote/Very Remote (Table 2)</div>
-      <div>Hospitality, Cafe jobs eligible</div>
+      <div class="legend-category">Australia (Table 2)</div>
+      <div>Tourism and hospitality work (from 22 June 2021)</div>
     </div>
   </div>
   <div class="legend-item" onclick="showInfo(3)">
     <div class="legend-color" style="background:#ffff00"></div>
     <div class="legend-text">
-      <div class="legend-category">Remote/Very Remote (Table 3)</div>
-      <div>Hospitality, Cafe jobs eligible</div>
+      <div class="legend-category">Northern Australia (Table 3)</div>
+      <div>Tourism and hospitality work (from 22 June 2021)</div>
     </div>
   </div>
   <div class="legend-item" onclick="showInfo(4)">
     <div class="legend-color" style="background:#32cd32"></div>
     <div class="legend-text">
-      <div class="legend-category">Regional Areas (Table 4)</div>
-      <div>Primary industries only (Mining, Forestry, Agriculture, Construction)</div>
+      <div class="legend-category">Regional Australia (Table 4)</div>
+      <div>Specified work (Primary industries)</div>
     </div>
   </div>
   <div class="legend-item" onclick="showInfo(5)">
     <div class="legend-color" style="background:#0078ff"></div>
     <div class="legend-text">
-      <div class="legend-category">Bushfire Areas (Table 5)</div>
-      <div>Bushfire recovery work (post 31 July 2019)</div>
+      <div class="legend-category">Bushfire Declared Areas (Table 5)</div>
+      <div>Bushfire recovery work (after 31 July 2019)</div>
     </div>
   </div>
   <div class="legend-item" onclick="showInfo(6)">
     <div class="legend-color" style="background:#9370db"></div>
     <div class="legend-text">
-      <div class="legend-category">Natural Disaster Areas (Table 6)</div>
-      <div>Disaster recovery work (post 31 Dec 2021)</div>
+      <div class="legend-category">Natural Disaster Declared Areas (Table 6)</div>
+      <div>Natural disaster recovery work (from 31 Dec 2021)</div>
     </div>
   </div>
   
@@ -294,61 +294,36 @@ function initVisitorStats() {
 function showInfo(tableNum) {
   const infoData = {
     1: {
-      title: "Remote/Very Remote Areas (Table 1)",
+      title: "Remote and Very Remote Australia (Table 1)",
       content: `<strong>Work Requirements:</strong><br>
-        • Hospitality jobs (restaurants, cafes, hotels)<br>
-        • Tourism and accommodation services<br>
-        • Any work in these remote/very remote areas<br><br>
-        <strong>88-Day Rule:</strong> Work in these areas can count toward your 88 days for a second Working Holiday visa (subclass 417).`
+        Tourism and hospitality work carried out from 22 June 2021 in the following areas of Remote and Very Remote Australia is considered eligible specified work for the purpose of a second or third Working Holiday (subclass 417) visa application lodged from 5 March 2022.`
     },
     2: {
-      title: "Remote/Very Remote Areas (Table 2)",
+      title: "Australia (Table 2)",
       content: `<strong>Work Requirements:</strong><br>
-        • Hospitality jobs (restaurants, cafes, hotels)<br>
-        • Tourism and accommodation services<br>
-        • Any work in these remote/very remote areas<br><br>
-        <strong>88-Day Rule:</strong> Work in these areas can count toward your 88 days for a second Working Holiday visa (subclass 417).`
+        Tourism and hospitality work carried out from 22 June 2021 in the following areas of Australia is considered eligible specified work for the purpose of a second or third Working Holiday (subclass 417) visa application lodged from 1 July 2022.`
     },
     3: {
-      title: "Remote/Very Remote Areas (Table 3)",
+      title: "Northern Australia (Table 3)",
       content: `<strong>Work Requirements:</strong><br>
-        • Hospitality jobs (restaurants, cafes, hotels)<br>
-        • Tourism and accommodation services<br>
-        • Any work in these remote/very remote areas<br><br>
-        <strong>88-Day Rule:</strong> Work in these areas can count toward your 88 days for a second Working Holiday visa (subclass 417).`
+        Tourism and hospitality work carried out from 22 June 2021 in the following areas of Northern Australia is considered eligible specified work for the purpose of a second or third Working Holiday (subclass 417) visa application lodged from 5 March 2022.`
     },
     4: {
-      title: "Regional Areas (Table 4)",
-      content: `<strong>Work Requirements (Primary Industries Only):</strong><br>
-        • Mining and resources<br>
-        • Forestry and logging<br>
-        • Agriculture (farming, fruit picking, etc.)<br>
-        • Construction in regional areas<br>
-        • Fishing and aquaculture<br><br>
-        <strong>88-Day Rule:</strong> Only work in primary industries in these regional areas counts toward your 88 days.`
+      title: "Regional Australia (Table 4)",
+      content: `<strong>Work Requirements:</strong><br>
+        Specified work carried out in the following areas of regional Australia is considered eligible specified work for the purpose of a second or third Working Holiday (subclass 417) visa.`
     },
     5: {
       title: "Bushfire Declared Areas (Table 5)",
-      content: `<strong>Bushfire Recovery Work Requirements:</strong><br>
-        Bushfire recovery work carried out <strong>after 31 July 2019</strong> in these areas is considered specified work for a second or third Working Holiday (subclass 417) visa.<br><br>
-        <strong>Eligible Work:</strong><br>
-        • Bushfire recovery and cleanup<br>
-        • Infrastructure rebuilding<br>
-        • Environmental restoration<br>
-        • Community recovery services`
+      content: `<strong>Work Requirements:</strong><br>
+        Bushfire recovery work carried out after 31 July 2019 in the following areas is considered specified work for the purpose of a second or third Working Holiday (subclass 417) visa.`
     },
     6: {
       title: "Natural Disaster Declared Areas (Table 6)",
-      content: `<strong>Natural Disaster Recovery Work Requirements:</strong><br>
-        Recovery work carried out <strong>from 31 December 2021</strong> in areas declared affected by natural disasters (floods, cyclones, severe weather) is considered eligible for specified work.<br><br>
+      content: `<strong>Work Requirements:</strong><br>
+        Recovery work carried out from 31 December 2021 in the following areas of Australia, that have been declared affected by other natural disasters, such as flood, cyclones or other severe weather events, is considered eligible for specified work for the purpose of a second or third Working Holiday (subclass 417) visa.<br><br>
         <strong>Application Requirements:</strong><br>
-        • Applies to applications lodged on or after 5 April 2025<br>
-        • Applies to undecided applications as of this date<br><br>
-        <strong>Eligible Work:</strong><br>
-        • Flood cleanup and recovery<br>
-        • Cyclone damage repair<br>
-        • Infrastructure rebuilding<br>
-        • Community disaster recovery services`
+        This applies to applications lodged on or after 5 April 2025 and undecided applications on this date.`
     }
   };
 
