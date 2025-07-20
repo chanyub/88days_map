@@ -4,7 +4,7 @@ Interactive map showing eligible work areas for Australian Working Holiday visa 
 
 ## 🌐 Live Sites
 
-- **Production**: https://chanyub.github.io/88days_map/
+- **Production**: https://88daysmap.com (or https://chanyub.github.io/88days_map/)
 - **Staging Demo**: Test `stg` branch locally
   1. Clone the repository: `git clone https://github.com/chanyub/88days_map.git`
   2. Switch to staging: `git checkout stg`
