@@ -24,6 +24,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  
+  <!-- JSON-based Real-time Chat using GitHub Gist API -->
+  <script>
+    // Simple real-time chat using GitHub Gist as backend
+    window.chatBackend = {
+      gistId: '88daysmap-chat-demo', // This would be a real Gist ID
+      apiUrl: 'https://api.github.com/gists/',
+      token: null, // GitHub personal access token (if needed)
+      
+      // For demo purposes, we'll use a simple polling mechanism
+      enabled: false, // Set to true when real backend is available
+      
+      async sendMessage(message) {
+        // This would send to GitHub Gist or other backend
+        console.log('Backend not configured - using local storage');
+        return false;
+      },
+      
+      async getMessages() {
+        // This would fetch from GitHub Gist or other backend
+        console.log('Backend not configured - using local storage');
+        return null;
+      }
+    };
+  </script>
   <style>
     html,body,#map{height:100%;margin:0}
     #search-container{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:white;padding:10px;border-radius:5px;box-shadow:0 2px 5px rgba(0,0,0,0.2)}
@@ -506,9 +531,16 @@ map.on('click', function(e) {
   }
 });
 
-/* 7. 간단한 채팅/방명록 기능 */
+/* 7. 실시간 채팅 기능 (백엔드 연동 준비) */
 function initChat() {
-  loadMessages();
+  // 백엔드가 설정되면 실시간 채팅, 아니면 로컬 스토리지 사용
+  if (window.chatBackend && window.chatBackend.enabled) {
+    setupRealtimeChat();
+  } else {
+    loadMessages();
+    // 로컬 전용 채팅 알림
+    showChatStatus('💬 Local chat only - messages visible to you only');
+  }
   
   // Enter 키로 메시지 전송
   document.getElementById('chat-input').addEventListener('keypress', function(e) {
@@ -522,6 +554,21 @@ function initChat() {
       document.getElementById('chat-input').focus();
     }
   });
+  
+  // 저장된 사용자명 불러오기
+  const savedUsername = localStorage.getItem('guestbookUsername');
+  if (savedUsername) {
+    document.getElementById('username-input').value = savedUsername;
+  }
+}
+
+function showChatStatus(message) {
+  const header = document.getElementById('chat-header');
+  header.title = message;
+  // 3초 후 원래 제목으로 복원
+  setTimeout(() => {
+    header.title = '';
+  }, 3000);
 }
 
 function toggleChat() {
@@ -544,37 +591,52 @@ function sendMessage() {
   const username = usernameInput.value.trim() || 'Anonymous';
   
   if (message) {
-    const timestamp = new Date().toLocaleString();
-    const messageObj = {
-      text: message,
-      author: username,
-      time: timestamp
-    };
-    
     // 사용자명을 로컬 스토리지에 저장 (다음에 자동 입력)
     localStorage.setItem('guestbookUsername', username);
     
-    // 로컬 스토리지에 저장
-    const messages = getMessages();
-    messages.push(messageObj);
-    
-    // 최대 50개 메시지만 유지
-    if (messages.length > 50) {
-      messages.splice(0, messages.length - 50);
+    if (window.chatBackend && window.chatBackend.enabled) {
+      // 실시간 백엔드에 메시지 전송
+      window.chatBackend.sendMessage({
+        text: message,
+        author: username,
+        timestamp: Date.now()
+      }).then(() => {
+        console.log('Message sent to backend');
+      }).catch((error) => {
+        console.error('Error sending message:', error);
+        saveToLocalStorage(message, username);
+      });
+    } else {
+      // 백엔드 없으면 로컬 저장
+      saveToLocalStorage(message, username);
     }
-    
-    localStorage.setItem('guestbookMessages', JSON.stringify(messages));
-    
-    // 화면에 표시
-    addMessageToChat(messageObj);
     
     // 메시지 입력창만 비우기 (사용자명은 유지)
     input.value = '';
-    
-    // 스크롤을 아래로
-    const messagesContainer = document.getElementById('chat-messages');
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
+}
+
+function saveToLocalStorage(message, username) {
+  const timestamp = new Date().toLocaleString();
+  const messageObj = {
+    text: message,
+    author: username,
+    time: timestamp
+  };
+  
+  const messages = getMessages();
+  messages.push(messageObj);
+  
+  // 최대 50개 메시지만 유지
+  if (messages.length > 50) {
+    messages.splice(0, messages.length - 50);
+  }
+  
+  localStorage.setItem('guestbookMessages', JSON.stringify(messages));
+  addMessageToChat(messageObj);
+  
+  const messagesContainer = document.getElementById('chat-messages');
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
 function getMessages() {
@@ -588,18 +650,57 @@ function loadMessages() {
   
   container.innerHTML = '';
   
-  // 저장된 사용자명 불러오기
-  const savedUsername = localStorage.getItem('guestbookUsername');
-  if (savedUsername) {
-    document.getElementById('username-input').value = savedUsername;
-  }
-  
   if (messages.length === 0) {
     container.innerHTML = '<div style="color:#999;text-align:center;padding:20px;">No messages yet. Be the first to leave a message!</div>';
   } else {
     messages.forEach(msg => addMessageToChat(msg));
     container.scrollTop = container.scrollHeight;
   }
+}
+
+function displayFirebaseMessages(data) {
+  const container = document.getElementById('chat-messages');
+  container.innerHTML = '';
+  
+  if (!data) {
+    container.innerHTML = '<div style="color:#999;text-align:center;padding:20px;">🔥 Real-time chat enabled! Be the first to leave a message!</div>';
+    return;
+  }
+  
+  // Firebase 메시지를 배열로 변환하고 시간순 정렬
+  const messages = Object.entries(data).map(([key, value]) => ({
+    ...value,
+    id: key
+  })).sort((a, b) => {
+    // timestamp가 있으면 사용, 없으면 현재 시간
+    const timeA = a.timestamp || Date.now();
+    const timeB = b.timestamp || Date.now();
+    return timeA - timeB;
+  });
+  
+  // 최근 50개만 표시
+  const recentMessages = messages.slice(-50);
+  
+  recentMessages.forEach(msg => {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message';
+    
+    const displayTime = msg.timestamp ? 
+      new Date(msg.timestamp).toLocaleString() : 
+      (msg.time || 'Just now');
+    
+    messageDiv.innerHTML = `
+      <div class="message-header">
+        <div class="message-author">${escapeHtml(msg.author || 'Anonymous')}</div>
+        <div class="message-time">${displayTime}</div>
+      </div>
+      <div class="message-text">${escapeHtml(msg.text || '')}</div>
+    `;
+    
+    container.appendChild(messageDiv);
+  });
+  
+  container.scrollTop = container.scrollHeight;
 }
 
 function addMessageToChat(messageObj) {
