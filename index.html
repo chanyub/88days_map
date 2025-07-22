@@ -25,29 +25,43 @@
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   
-  <!-- JSON-based Real-time Chat using GitHub Gist API -->
-  <script>
-    // Simple real-time chat using GitHub Gist as backend
-    window.chatBackend = {
-      gistId: '88daysmap-chat-demo', // This would be a real Gist ID
-      apiUrl: 'https://api.github.com/gists/',
-      token: null, // GitHub personal access token (if needed)
-      
-      // For demo purposes, we'll use a simple polling mechanism
-      enabled: false, // Set to true when real backend is available
-      
-      async sendMessage(message) {
-        // This would send to GitHub Gist or other backend
-        console.log('Backend not configured - using local storage');
-        return false;
-      },
-      
-      async getMessages() {
-        // This would fetch from GitHub Gist or other backend
-        console.log('Backend not configured - using local storage');
-        return null;
-      }
+  <!-- Firebase Real-time Chat -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getDatabase, ref, push, onValue, serverTimestamp, limitToLast, query } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+    
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXKhKl6tnlyKZ84YXyZRJXoIbXRpXRgAA",
+      authDomain: "palpalzones.firebaseapp.com",
+      databaseURL: "https://palpalzones-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "palpalzones",
+      storageBucket: "palpalzones.firebasestorage.app",
+      messagingSenderId: "164023944108",
+      appId: "1:164023944108:web:f6f8e0707951e0757f3009",
+      measurementId: "G-6QG5JB2X63"
     };
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    
+    // Make Firebase functions available globally
+    window.firebaseDB = database;
+    window.firebaseRef = ref;
+    window.firebasePush = push;
+    window.firebaseOnValue = onValue;
+    window.firebaseServerTimestamp = serverTimestamp;
+    window.firebaseQuery = query;
+    window.firebaseLimitToLast = limitToLast;
+    
+    // Enable real-time chat
+    window.chatBackend = {
+      enabled: true,
+      database: database
+    };
+    
+    console.log('🔥 Firebase initialized successfully!');
   </script>
   <style>
     html,body,#map{height:100%;margin:0}
@@ -180,7 +194,7 @@
 </div>
 
 <div id="chat-container" class="chat-collapsed">
-  <div id="chat-header" onclick="toggleChat()">💬 Guestbook</div>
+  <div id="chat-header" onclick="toggleChat()">💬 Guestbook <span id="chat-status">🔄</span></div>
   <div id="chat-content">
     <div id="chat-messages"></div>
     <div id="chat-input-container">
@@ -531,16 +545,18 @@ map.on('click', function(e) {
   }
 });
 
-/* 7. 실시간 채팅 기능 (백엔드 연동 준비) */
+/* 7. Firebase 실시간 채팅 기능 */
 function initChat() {
-  // 백엔드가 설정되면 실시간 채팅, 아니면 로컬 스토리지 사용
-  if (window.chatBackend && window.chatBackend.enabled) {
-    setupRealtimeChat();
-  } else {
-    loadMessages();
-    // 로컬 전용 채팅 알림
-    showChatStatus('💬 Local chat only - messages visible to you only');
-  }
+  // Firebase 로딩 대기 후 채팅 설정
+  setTimeout(() => {
+    if (window.chatBackend && window.chatBackend.enabled && window.firebaseDB) {
+      setupFirebaseChat();
+      showChatStatus('🔥 Real-time chat connected!');
+    } else {
+      loadMessages();
+      showChatStatus('💬 Local chat only - Firebase connection failed');
+    }
+  }, 1000); // Firebase 로딩 대기
   
   // Enter 키로 메시지 전송
   document.getElementById('chat-input').addEventListener('keypress', function(e) {
@@ -562,13 +578,46 @@ function initChat() {
   }
 }
 
+function setupFirebaseChat() {
+  // Firebase 실시간 메시지 리스너 설정
+  const messagesRef = window.firebaseRef(window.firebaseDB, 'messages');
+  const messagesQuery = window.firebaseQuery(messagesRef, window.firebaseLimitToLast(50));
+  
+  window.firebaseOnValue(messagesQuery, (snapshot) => {
+    const data = snapshot.val();
+    displayFirebaseMessages(data);
+  }, (error) => {
+    console.error('Firebase error:', error);
+    showChatStatus('❌ Real-time chat error - using local storage');
+    loadMessages();
+  });
+}
+
 function showChatStatus(message) {
   const header = document.getElementById('chat-header');
+  const statusSpan = document.getElementById('chat-status');
+  
   header.title = message;
-  // 3초 후 원래 제목으로 복원
+  
+  // 상태 아이콘 업데이트
+  if (message.includes('Real-time chat connected')) {
+    statusSpan.textContent = '🔥';
+    statusSpan.title = 'Real-time chat active';
+  } else if (message.includes('Local chat only')) {
+    statusSpan.textContent = '💾';
+    statusSpan.title = 'Local storage only';
+  } else if (message.includes('error') || message.includes('Failed')) {
+    statusSpan.textContent = '❌';
+    statusSpan.title = 'Connection error';
+  } else {
+    statusSpan.textContent = '🔄';
+    statusSpan.title = 'Connecting...';
+  }
+  
+  // 5초 후 툴팁 제거
   setTimeout(() => {
     header.title = '';
-  }, 3000);
+  }, 5000);
 }
 
 function toggleChat() {
@@ -594,20 +643,25 @@ function sendMessage() {
     // 사용자명을 로컬 스토리지에 저장 (다음에 자동 입력)
     localStorage.setItem('guestbookUsername', username);
     
-    if (window.chatBackend && window.chatBackend.enabled) {
-      // 실시간 백엔드에 메시지 전송
-      window.chatBackend.sendMessage({
+    if (window.chatBackend && window.chatBackend.enabled && window.firebaseDB) {
+      // Firebase에 메시지 전송
+      const messagesRef = window.firebaseRef(window.firebaseDB, 'messages');
+      const messageData = {
         text: message,
         author: username,
-        timestamp: Date.now()
-      }).then(() => {
-        console.log('Message sent to backend');
+        timestamp: window.firebaseServerTimestamp()
+      };
+      
+      window.firebasePush(messagesRef, messageData).then(() => {
+        console.log('✅ Message sent to Firebase');
       }).catch((error) => {
-        console.error('Error sending message:', error);
+        console.error('❌ Firebase send error:', error);
+        // Firebase 실패시 로컬 저장으로 폴백
         saveToLocalStorage(message, username);
+        showChatStatus('❌ Failed to send - saved locally');
       });
     } else {
-      // 백엔드 없으면 로컬 저장
+      // Firebase 없으면 로컬 저장
       saveToLocalStorage(message, username);
     }
     
