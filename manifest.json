@@ -1,7 +1,7 @@
 {
-  "name": "88 Days Map Australia - Working Holiday Visa Areas",
-  "short_name": "88 Days Map",
-  "description": "Interactive map of Australian Working Holiday Visa 88-day regional work areas",
+  "name": "88 Days Map Australia - 호주워홀 세컨비자 지도 - Working Holiday Visa Areas",
+  "short_name": "88 Days Map 세컨지도",
+  "description": "Interactive map of Australian Working Holiday Visa 88-day regional work areas. 호주 워킹홀리데이 88일 세컨비자 지역 근무 인터랙티브 지도",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
