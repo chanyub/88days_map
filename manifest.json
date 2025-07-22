@@ -1,0 +1,20 @@
+{
+  "name": "88 Days Map Australia - Working Holiday Visa Areas",
+  "short_name": "88 Days Map",
+  "description": "Interactive map of Australian Working Holiday Visa 88-day regional work areas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4a90e2",
+  "orientation": "portrait-primary",
+  "categories": ["travel", "utility", "productivity"],
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "thumbnail.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

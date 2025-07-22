@@ -2,28 +2,96 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <title>88 Days Map - Working Holiday Visa Areas</title>
+  <title>88 Days Map Australia - Working Holiday Visa Regional Work Areas | Find Eligible Postcodes</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Complete interactive map of Australian Working Holiday Visa 88-day regional work areas. Find eligible postcodes for agriculture, hospitality, tourism jobs. Free tool for subclass 417 visa holders."/>
+  <meta name="keywords" content="working holiday visa 88 days, australian working holiday areas, 88 days map australia, working holiday postcode, australia regional work visa, subclass 417 visa, working holiday jobs australia, backpacker jobs australia, australian visa requirements, working holiday visa extension, regional australia jobs, australia postcode map, working holiday visa guide"/>
+  <meta name="author" content="하고싶은게많은"/>
+  <meta name="robots" content="index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
+  <meta name="googlebot" content="index, follow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="canonical" href="https://chanyub.github.io/88days_map/"/>
+  
+  <!-- Structured Data for Search Engines -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "88 Days Map Australia",
+    "description": "Interactive map showing eligible work areas for Australian Working Holiday visa holders to complete their 88-day requirement",
+    "url": "https://chanyub.github.io/88days_map/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "creator": {
+      "@type": "Person",
+      "name": "하고싶은게많은",
+      "url": "https://www.youtube.com/@%ED%95%98%EA%B3%A0%EC%8B%B6%EC%9D%80%EA%B2%8C%EB%A7%8E%EC%9D%80"
+    },
+    "about": {
+      "@type": "Thing",
+      "name": "Working Holiday Visa Australia",
+      "description": "Australian Working Holiday Visa 88-day regional work requirement"
+    }
+  }
+  </script>
   
   <!-- Open Graph / Social Media Meta Tags -->
-  <meta property="og:title" content="88 Days Map - Working Holiday Visa Areas"/>
-  <meta property="og:description" content="Interactive map showing eligible work areas for Australian Working Holiday visa holders to complete their 88-day requirement."/>
+  <meta property="og:title" content="88 Days Map Australia - Working Holiday Visa Regional Work Areas"/>
+  <meta property="og:description" content="Complete interactive map of Australian Working Holiday Visa 88-day regional work areas. Find eligible postcodes for agriculture, hospitality, tourism jobs."/>
   <meta property="og:image" content="https://chanyub.github.io/88days_map/thumbnail.svg"/>
   <meta property="og:url" content="https://chanyub.github.io/88days_map/"/>
   <meta property="og:type" content="website"/>
-  <meta property="og:site_name" content="88 Days Map"/>
+  <meta property="og:site_name" content="88 Days Map Australia"/>
+  <meta property="og:locale" content="en_US"/>
   
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="88 Days Map - Working Holiday Visa Areas"/>
-  <meta name="twitter:description" content="Interactive map showing eligible work areas for Australian Working Holiday visa holders to complete their 88-day requirement."/>
+  <meta name="twitter:title" content="88 Days Map Australia - Working Holiday Visa Regional Work Areas"/>
+  <meta name="twitter:description" content="Complete interactive map of Australian Working Holiday Visa 88-day regional work areas. Find eligible postcodes for agriculture, hospitality, tourism jobs."/>
   <meta name="twitter:image" content="https://chanyub.github.io/88days_map/thumbnail.svg"/>
+  <meta name="twitter:site" content="@88DaysMap"/>
   
-  <!-- General Meta Tags -->
-  <meta name="description" content="Interactive map showing eligible work areas for Australian Working Holiday visa holders to complete their 88-day requirement."/>
-  <meta name="keywords" content="working holiday visa, australia, 88 days, postcode, map, visa, backpacker"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Additional SEO Meta Tags -->
+  <meta name="theme-color" content="#4a90e2"/>
+  <meta name="msapplication-TileColor" content="#4a90e2"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="88 Days Map"/>
+  
+  <!-- Geo Tags -->
+  <meta name="geo.region" content="AU"/>
+  <meta name="geo.country" content="Australia"/>
+  <meta name="ICBM" content="-25.274398, 133.775136"/>
+  <meta name="geo.position" content="-25.274398;133.775136"/>
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json"/>
+  
+  <!-- Favicon and Icons -->
+  <link rel="icon" type="image/svg+xml" href="thumbnail.svg"/>
+  <link rel="apple-touch-icon" href="thumbnail.svg"/>
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" as="style"/>
+  <link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" as="script"/>
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    // Replace G-XXXXXXXXXX with your actual Google Analytics ID
+    // gtag('config', 'G-XXXXXXXXXX');
+  </script>
   
   <!-- Firebase Real-time Chat -->
   <script type="module">
@@ -210,6 +278,54 @@
 </div>
 
 <div id="map"></div>
+
+<!-- SEO Content (Hidden but readable by search engines) -->
+<div style="position:absolute;left:-9999px;top:-9999px;">
+  <h1>88 Days Map Australia - Working Holiday Visa Regional Work Areas</h1>
+  <h2>Complete Guide to Australian Working Holiday Visa 88-Day Requirement</h2>
+  
+  <section>
+    <h3>What is the 88-Day Requirement?</h3>
+    <p>Australian Working Holiday visa (subclass 417) holders must complete 88 days of specified work in regional Australia to be eligible for a second Working Holiday visa. Our interactive map shows all eligible postcodes and work areas across Australia.</p>
+  </section>
+  
+  <section>
+    <h3>Eligible Work Areas by Category</h3>
+    <h4>Remote and Very Remote Australia (Tables 1-3)</h4>
+    <p>Tourism and hospitality work in remote areas including restaurants, cafes, hotels, and accommodation services. Work must be completed from 22 June 2021 onwards.</p>
+    
+    <h4>Regional Australia (Table 4)</h4>
+    <p>Primary industry work including agriculture, mining, forestry, construction, and fishing in designated regional areas across Australia.</p>
+    
+    <h4>Bushfire Recovery Areas (Table 5)</h4>
+    <p>Bushfire recovery and cleanup work in declared bushfire affected areas. Work must be completed after 31 July 2019.</p>
+    
+    <h4>Natural Disaster Areas (Table 6)</h4>
+    <p>Recovery work in areas affected by floods, cyclones, and severe weather events. Applies to work completed from 31 December 2021.</p>
+  </section>
+  
+  <section>
+    <h3>How to Use This Map</h3>
+    <p>Search for your postcode or locality using the search function. Click on colored areas to view detailed work requirements. Join our real-time chat to connect with other Working Holiday visa holders.</p>
+  </section>
+  
+  <section>
+    <h3>Key Features</h3>
+    <ul>
+      <li>Interactive postcode map with 2000+ eligible areas</li>
+      <li>Real-time search for postcodes and localities</li>
+      <li>Detailed work requirement information for each area type</li>
+      <li>Official government source references</li>
+      <li>Real-time chat community for visa holders</li>
+      <li>Mobile-friendly responsive design</li>
+    </ul>
+  </section>
+  
+  <section>
+    <h3>Official Information Source</h3>
+    <p>All information is sourced from the Australian Department of Home Affairs official specified work requirements for Working Holiday visa subclass 417.</p>
+  </section>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
