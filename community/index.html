@@ -1,0 +1,3294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>88 Zones Community - Working Holiday Australia Community Board | 호주워홀 커뮤니티</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Join the 88 Zones Community - Connect with fellow Working Holiday visa holders, share experiences, ask questions, and get advice about 88-day work in Australia. 호주 워킹홀리데이 88일 커뮤니티 - 경험 공유, 질문, 조언"/>
+  <meta name="keywords" content="working holiday community, australia backpacker forum, 88 days work community, visa holder community, australia work experience, 호주워홀 커뮤니티, 호주 백패커 커뮤니티, 세컨비자 커뮤니티"/>
+  <meta name="author" content="하고싶은게많은"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="canonical" href="https://www.88zones.com/community/"/>
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="88 Zones Community - Australia Working Holiday Community"/>
+  <meta property="og:description" content="Connect with fellow Working Holiday visa holders, share experiences and get advice about 88-day work in Australia."/>
+  <meta property="og:image" content="https://www.88zones.com/thumbnail.svg"/>
+  <meta property="og:url" content="https://www.88zones.com/community/"/>
+  <meta property="og:type" content="website"/>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="../thumbnail.svg"/>
+  
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getDatabase, ref, push, onValue, serverTimestamp, limitToLast, query, orderByChild, set, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    
+    // Firebase configuration (using same as main map)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXKhKl6tnlyKZ84YXyZRJXoIbXRpXRgAA",
+      authDomain: "palpalzones.firebaseapp.com",
+      databaseURL: "https://palpalzones-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "palpalzones",
+      storageBucket: "palpalzones.firebasestorage.app",
+      messagingSenderId: "164023944108",
+      appId: "1:164023944108:web:f6f8e0707951e0757f3009",
+      measurementId: "G-6QG5JB2X63"
+    };
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    
+    // Make Firebase functions available globally
+    window.firebaseDB = database;
+    window.firebaseRef = ref;
+    window.firebasePush = push;
+    window.firebaseOnValue = onValue;
+    window.firebaseServerTimestamp = serverTimestamp;
+    window.firebaseQuery = query;
+    window.firebaseLimitToLast = limitToLast;
+    window.firebaseOrderByChild = orderByChild;
+    window.firebaseSet = set;
+    window.firebaseRemove = remove;
+    window.firebaseAuth = auth;
+    window.firebaseGoogleProvider = provider;
+    window.firebaseSignInWithPopup = signInWithPopup;
+    window.firebaseSignOut = signOut;
+    window.firebaseOnAuthStateChanged = onAuthStateChanged;
+    
+    console.log('🔥 Firebase initialized for Community Board!');
+    console.log('Auth available:', !!auth);
+    console.log('Google Provider available:', !!provider);
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    /* Header */
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 0;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #333;
+    }
+    
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    
+    .logo-text h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+      margin: 0;
+    }
+    
+    .logo-text p {
+      font-size: 12px;
+      color: #666;
+      margin: 0;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .nav-link {
+      text-decoration: none;
+      color: #666;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    
+    .nav-link:hover {
+      color: #667eea;
+      background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .nav-link.primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+    
+    .nav-link.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .auth-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .login-btn {
+      background: linear-gradient(135deg, #4285f4, #34a853);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(66, 133, 244, 0.2);
+    }
+    
+    .user-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid #4285f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 12px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .pattern-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .user-name:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+    
+    .user-email {
+      font-size: 11px;
+      color: #666;
+    }
+    
+    .edit-nickname-btn {
+      position: absolute;
+      right: -20px;
+      top: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      font-size: 12px;
+    }
+    
+    .user-profile:hover .edit-nickname-btn {
+      opacity: 1;
+    }
+    
+    .logout-btn {
+      background: #f44336;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .logout-btn:hover {
+      background: #d32f2f;
+    }
+    
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+    
+    /* Welcome Section */
+    .welcome-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    }
+    
+    .welcome-section h2 {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 15px;
+    }
+    
+    .welcome-section p {
+      font-size: 16px;
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto 25px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      margin-top: 25px;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 28px;
+      font-weight: bold;
+      color: #667eea;
+      display: block;
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    /* Community Board */
+    .board-section {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px;
+      align-items: start;
+    }
+    
+    .posts-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+    }
+    
+    .new-post-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+    
+    .new-post-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Post Items */
+    .post-item {
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      background: white;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .post-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .post-author {
+      font-weight: 600;
+      color: #333;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .author-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .verified-badge {
+      display: inline-flex;
+      align-items: center;
+      background: linear-gradient(135deg, #4285f4, #34a853);
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 4px rgba(66, 133, 244, 0.3);
+    }
+    
+    .verified-icon {
+      font-size: 8px;
+      margin-right: 2px;
+    }
+    
+    .post-time {
+      font-size: 12px;
+      color: #999;
+    }
+    
+    .post-category {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    
+    .category-question { background: #e3f2fd; color: #1976d2; }
+    .category-experience { background: #e8f5e8; color: #388e3c; }
+    .category-job { background: #fff3e0; color: #f57c00; }
+    .category-general { background: #f3e5f5; color: #7b1fa2; }
+    
+    .post-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    
+    .post-preview {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    
+    .post-edited {
+      font-size: 11px;
+      color: #999;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+    
+    .post-footer {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+      font-size: 13px;
+      color: #999;
+    }
+    
+    .post-stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .post-action {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    
+    .post-action:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+    
+    .post-action.liked {
+      background: rgba(255, 107, 107, 0.1);
+      color: #ff6b6b;
+    }
+    
+    .post-action.liked:hover {
+      background: rgba(255, 107, 107, 0.2);
+    }
+    
+    .action-icon {
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+    
+    .post-action.liked .action-icon {
+      transform: scale(1.2);
+    }
+    
+    .post-action:active .action-icon {
+      transform: scale(0.9);
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .sidebar-widget {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .widget-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+    }
+    
+    .category-list {
+      list-style: none;
+    }
+    
+    .category-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .category-list li:hover {
+      color: #667eea;
+      transform: translateX(3px);
+    }
+    
+    .category-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .category-count {
+      background: #f0f0f0;
+      color: #666;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #333;
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+    
+    .close-btn:hover {
+      background: #f0f0f0;
+      color: #333;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 25px;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+    
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #666;
+    }
+    
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Post Detail Modal */
+    .post-detail-modal {
+      max-width: 800px;
+      width: 95%;
+    }
+    
+    .post-detail-header {
+      margin-bottom: 20px;
+    }
+    
+    .post-detail-category {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    
+    .post-detail-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    
+    .post-detail-meta {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    
+    .post-detail-content {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #444;
+      margin-bottom: 25px;
+      white-space: pre-wrap;
+    }
+    
+    .post-detail-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 15px 0;
+      border-top: 1px solid #e0e0e0;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 25px;
+    }
+    
+    .replies-section {
+      margin-top: 25px;
+    }
+    
+    .replies-header {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .reply-form {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+    
+    .reply-item {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background: white;
+    }
+    
+    .reply-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .reply-author {
+      font-weight: 600;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .reply-time {
+      font-size: 12px;
+      color: #999;
+    }
+    
+    .reply-content {
+      color: #555;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    
+    .reply-edited {
+      font-size: 11px;
+      color: #999;
+      font-style: italic;
+      margin-top: 5px;
+    }
+    
+    .reply-like {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+      width: fit-content;
+    }
+    
+    .reply-like:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+    
+    .reply-like.liked {
+      background: rgba(255, 107, 107, 0.1);
+      color: #ff6b6b;
+    }
+    
+    .reply-like.liked:hover {
+      background: rgba(255, 107, 107, 0.2);
+    }
+    
+    .reply-like-icon {
+      font-size: 12px;
+      transition: transform 0.2s ease;
+    }
+    
+    .reply-like.liked .reply-like-icon {
+      transform: scale(1.2);
+      animation: likeHeartbeat 0.6s ease;
+    }
+    
+    .reply-like:active .reply-like-icon {
+      transform: scale(0.9);
+    }
+    
+    @keyframes likeHeartbeat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1.2); }
+    }
+    
+    /* Nickname Edit Modal */
+    .nickname-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+    
+    .nickname-modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+    }
+    
+    .nickname-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .nickname-modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+    }
+    
+    .nickname-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    
+    .nickname-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .nickname-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+    
+    .nickname-hint {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 15px;
+      padding: 8px;
+      background: #f8f9fa;
+      border-radius: 6px;
+    }
+    
+    .no-replies {
+      text-align: center;
+      color: #999;
+      padding: 30px;
+      font-style: italic;
+    }
+    
+    /* Translation Button */
+    .translate-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border: 1px solid #667eea;
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      margin-left: 8px;
+      user-select: none;
+    }
+    
+    .translate-btn:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-1px);
+    }
+    
+    .translate-btn.active {
+      background: #667eea;
+      color: white;
+    }
+    
+    .translate-btn-icon {
+      font-size: 10px;
+    }
+    
+    .post-translate-section {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .reply-translate-section {
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .translated-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 6px;
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 500;
+    }
+    
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #f0f0f0;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .no-posts {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+    
+    .no-posts-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .board-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        order: -1;
+      }
+      
+      .container {
+        padding: 20px 15px;
+      }
+      
+      .welcome-section {
+        padding: 20px;
+      }
+      
+      .posts-container {
+        padding: 20px;
+      }
+      
+      .post-item {
+        padding: 15px;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .nav-links {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="../" class="logo">
+        <div class="logo-icon">88</div>
+        <div class="logo-text">
+          <h1>88 Zones</h1>
+          <p>Working Holiday Community</p>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="../" class="nav-link">🗺️ Interactive Map</a>
+        <a href="../faq/" class="nav-link">❓ FAQ</a>
+        <a href="../contact/" class="nav-link">📱 Contact</a>
+        <div class="auth-section">
+          <div id="user-profile" class="user-profile" style="display: none;">
+            <div id="user-avatar" class="user-avatar"></div>
+            <div class="user-info">
+              <div id="user-name" class="user-name" onclick="openNicknameModal()"></div>
+              <div id="user-email" class="user-email"></div>
+              <button class="edit-nickname-btn" onclick="openNicknameModal()" title="Edit nickname">✏️</button>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+          </div>
+          <button id="login-btn" class="login-btn" onclick="handleGoogleLogin()">
+            <span>🚀</span>
+            <span>Login with Google</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+      <h2>Welcome to 88 Zones Community</h2>
+      <p>Connect with fellow Working Holiday visa holders, share your experiences, ask questions, and get advice about 88-day work opportunities across Australia. Join our growing community!</p>
+      
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number" id="total-posts">0</span>
+          <div class="stat-label">Total Posts</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="total-members">0</span>
+          <div class="stat-label">Members</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="recent-activity">0</span>
+          <div class="stat-label">Today's Posts</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Board Section -->
+    <section class="board-section">
+      <!-- Posts Container -->
+      <div class="posts-container">
+        <div class="section-header">
+          <h3 class="section-title">Community Board</h3>
+          <button class="new-post-btn" onclick="openNewPostModal()">
+            ✍️ Write Post
+          </button>
+        </div>
+        
+        <div id="posts-list">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading community posts...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <!-- Categories -->
+        <div class="sidebar-widget">
+          <h4 class="widget-title">Categories</h4>
+          <ul class="category-list">
+            <li onclick="filterByCategory('all')">
+              <span>🌟 All Posts</span>
+              <span class="category-count" id="count-all">0</span>
+            </li>
+            <li onclick="filterByCategory('question')">
+              <span>❓ Questions</span>
+              <span class="category-count" id="count-question">0</span>
+            </li>
+            <li onclick="filterByCategory('experience')">
+              <span>💼 Work Experience</span>
+              <span class="category-count" id="count-experience">0</span>
+            </li>
+            <li onclick="filterByCategory('job')">
+              <span>🎯 Job Opportunities</span>
+              <span class="category-count" id="count-job">0</span>
+            </li>
+            <li onclick="filterByCategory('general')">
+              <span>💬 General Discussion</span>
+              <span class="category-count" id="count-general">0</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="sidebar-widget">
+          <h4 class="widget-title">Quick Links</h4>
+          <ul class="category-list">
+            <li onclick="window.open('../', '_blank')">
+              <span>🗺️ 88 Days Map</span>
+            </li>
+            <li onclick="window.open('https://immi.homeaffairs.gov.au/what-we-do/whm-program/specified-work-conditions/specified-work-417', '_blank')">
+              <span>📋 Official Requirements</span>
+            </li>
+            <li onclick="scrollToTop()">
+              <span>⬆️ Back to Top</span>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <!-- Post Detail Modal -->
+  <div id="post-detail-modal" class="modal">
+    <div class="modal-content post-detail-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Post Details</h3>
+        <button class="close-btn" onclick="closePostDetail()">&times;</button>
+      </div>
+      
+      <div id="post-detail-content">
+        <!-- Content will be dynamically loaded -->
+      </div>
+    </div>
+  </div>
+
+  <!-- New Post Modal -->
+  <div id="new-post-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Create New Post</h3>
+        <button class="close-btn" onclick="closeNewPostModal()">&times;</button>
+      </div>
+      
+      <form id="new-post-form">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" id="post-author" class="form-input" placeholder="Enter your name" maxlength="30" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Password (for editing/deleting)</label>
+          <input type="password" id="post-password" class="form-input" placeholder="Create a password" maxlength="50" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="post-category" class="form-select" required>
+            <option value="">Select a category</option>
+            <option value="question">❓ Question</option>
+            <option value="experience">💼 Work Experience</option>
+            <option value="job">🎯 Job Opportunity</option>
+            <option value="general">💬 General Discussion</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Title</label>
+          <input type="text" id="post-title" class="form-input" placeholder="Enter post title" maxlength="100" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Content</label>
+          <textarea id="post-content" class="form-textarea" placeholder="Write your post content..." maxlength="2000" required></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeNewPostModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Post Message</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Nickname Edit Modal -->
+  <div id="nickname-modal" class="nickname-modal">
+    <div class="nickname-modal-content">
+      <div class="nickname-modal-header">
+        <h3 class="nickname-modal-title">Edit Nickname</h3>
+        <button class="close-btn" onclick="closeNicknameModal()">&times;</button>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Display Name</label>
+        <input type="text" id="nickname-input" class="nickname-input" placeholder="Enter your display name" maxlength="30">
+        <small class="form-hint">This will be displayed instead of your Google name</small>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeNicknameModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="saveNickname()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+    let allPosts = [];
+    let currentFilter = 'all';
+    let currentUser = null;
+
+    // Initialize community board
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCommunityPosts();
+      loadSavedUserData();
+      initAuth();
+    });
+
+    // Initialize authentication
+    function initAuth() {
+      if (window.firebaseAuth && window.firebaseOnAuthStateChanged) {
+        window.firebaseOnAuthStateChanged(window.firebaseAuth, (user) => {
+          currentUser = user;
+          updateAuthUI(user);
+        });
+      }
+    }
+
+    // Handle Google login
+    async function handleGoogleLogin() {
+      try {
+        if (window.firebaseAuth && window.firebaseSignInWithPopup && window.firebaseGoogleProvider) {
+          console.log('Attempting Google login...');
+          const result = await window.firebaseSignInWithPopup(window.firebaseAuth, window.firebaseGoogleProvider);
+          currentUser = result.user;
+          console.log('Login successful:', currentUser);
+          showSuccessMessage('Successfully logged in!', 'success');
+        } else {
+          console.error('Firebase Auth not initialized');
+          alert('Google login is not available. Please check Firebase configuration.');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        let errorMessage = 'Failed to login. ';
+        
+        if (error.code === 'auth/popup-blocked') {
+          errorMessage += 'Pop-up was blocked. Please allow pop-ups for this site.';
+        } else if (error.code === 'auth/cancelled-popup-request') {
+          errorMessage += 'Login was cancelled.';
+        } else if (error.code === 'auth/popup-closed-by-user') {
+          errorMessage += 'Login window was closed.';
+        } else {
+          errorMessage += 'Please check Firebase configuration.';
+        }
+        
+        alert(errorMessage);
+      }
+    }
+
+    // Handle logout
+    async function handleLogout() {
+      try {
+        if (window.firebaseAuth && window.firebaseSignOut) {
+          await window.firebaseSignOut(window.firebaseAuth);
+          currentUser = null;
+          showSuccessMessage('Successfully logged out!', 'info');
+        }
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('Failed to logout. Please try again.');
+      }
+    }
+
+    // Generate unique pattern avatar for user
+    function generatePatternAvatar(userId, size = 30) {
+      // Create a hash from user ID for consistent colors and patterns
+      let hash = 0;
+      for (let i = 0; i < userId.length; i++) {
+        hash = userId.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      
+      // Generate colors based on hash
+      const hue1 = Math.abs(hash) % 360;
+      const hue2 = (hue1 + 120) % 360;
+      const saturation = 60 + (Math.abs(hash >> 8) % 30); // 60-90%
+      const lightness = 40 + (Math.abs(hash >> 16) % 20); // 40-60%
+      
+      const color1 = `hsl(${hue1}, ${saturation}%, ${lightness}%)`;
+      const color2 = `hsl(${hue2}, ${saturation}%, ${lightness + 15}%)`;
+      
+      // Generate pattern type
+      const patternType = Math.abs(hash) % 5;
+      let patternSvg = '';
+      
+      switch (patternType) {
+        case 0: // Diagonal stripes
+          patternSvg = `
+            <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="author-avatar">
+              <defs>
+                <pattern id="pattern-${userId}" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+                  <rect width="3" height="6" fill="${color1}"/>
+                  <rect x="3" width="3" height="6" fill="${color2}"/>
+                </pattern>
+              </defs>
+              <circle cx="${size/2}" cy="${size/2}" r="${size/2-1}" fill="url(#pattern-${userId})" stroke="#4285f4" stroke-width="1"/>
+            </svg>`;
+          break;
+        case 1: // Dots
+          patternSvg = `
+            <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="author-avatar">
+              <defs>
+                <pattern id="pattern-${userId}" patternUnits="userSpaceOnUse" width="8" height="8">
+                  <rect width="8" height="8" fill="${color1}"/>
+                  <circle cx="4" cy="4" r="2" fill="${color2}"/>
+                </pattern>
+              </defs>
+              <circle cx="${size/2}" cy="${size/2}" r="${size/2-1}" fill="url(#pattern-${userId})" stroke="#4285f4" stroke-width="1"/>
+            </svg>`;
+          break;
+        case 2: // Checkerboard
+          patternSvg = `
+            <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="author-avatar">
+              <defs>
+                <pattern id="pattern-${userId}" patternUnits="userSpaceOnUse" width="8" height="8">
+                  <rect width="4" height="4" fill="${color1}"/>
+                  <rect x="4" y="4" width="4" height="4" fill="${color1}"/>
+                  <rect x="4" y="0" width="4" height="4" fill="${color2}"/>
+                  <rect x="0" y="4" width="4" height="4" fill="${color2}"/>
+                </pattern>
+              </defs>
+              <circle cx="${size/2}" cy="${size/2}" r="${size/2-1}" fill="url(#pattern-${userId})" stroke="#4285f4" stroke-width="1"/>
+            </svg>`;
+          break;
+        case 3: // Waves
+          patternSvg = `
+            <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="author-avatar">
+              <defs>
+                <pattern id="pattern-${userId}" patternUnits="userSpaceOnUse" width="10" height="10">
+                  <rect width="10" height="10" fill="${color1}"/>
+                  <path d="M0,5 Q2.5,0 5,5 T10,5" stroke="${color2}" stroke-width="2" fill="none"/>
+                </pattern>
+              </defs>
+              <circle cx="${size/2}" cy="${size/2}" r="${size/2-1}" fill="url(#pattern-${userId})" stroke="#4285f4" stroke-width="1"/>
+            </svg>`;
+          break;
+        case 4: // Triangles
+          patternSvg = `
+            <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="author-avatar">
+              <defs>
+                <pattern id="pattern-${userId}" patternUnits="userSpaceOnUse" width="12" height="10">
+                  <rect width="12" height="10" fill="${color1}"/>
+                  <polygon points="6,2 10,8 2,8" fill="${color2}"/>
+                </pattern>
+              </defs>
+              <circle cx="${size/2}" cy="${size/2}" r="${size/2-1}" fill="url(#pattern-${userId})" stroke="#4285f4" stroke-width="1"/>
+            </svg>`;
+          break;
+      }
+      
+      return patternSvg;
+    }
+
+    // Update authentication UI
+    function updateAuthUI(user) {
+      const loginBtn = document.getElementById('login-btn');
+      const userProfile = document.getElementById('user-profile');
+      const userAvatar = document.getElementById('user-avatar');
+      const userName = document.getElementById('user-name');
+      const userEmail = document.getElementById('user-email');
+
+      if (user) {
+        // User is logged in
+        loginBtn.style.display = 'none';
+        userProfile.style.display = 'flex';
+        
+        // Create unique pattern avatar
+        const patternSvg = generatePatternAvatar(user.uid, 26);
+        userAvatar.innerHTML = patternSvg;
+        userAvatar.style.border = '2px solid #4285f4';
+        
+        // Load custom nickname or use display name
+        const customNickname = localStorage.getItem(`nickname_${user.uid}`);
+        userName.textContent = customNickname || user.displayName || 'User';
+        userEmail.textContent = user.email || '';
+      } else {
+        // User is logged out
+        loginBtn.style.display = 'flex';
+        userProfile.style.display = 'none';
+      }
+    }
+
+    // Hash password function (same as main site)
+    async function hashPassword(password) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password + 'salt_88zones_community');
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Load saved user data
+    function loadSavedUserData() {
+      const savedName = localStorage.getItem('communityUsername');
+      if (savedName) {
+        document.getElementById('post-author').value = savedName;
+      }
+    }
+
+    // Open new post modal
+    function openNewPostModal() {
+      const modal = document.getElementById('new-post-modal');
+      const authorInput = document.getElementById('post-author');
+      const passwordInput = document.getElementById('post-password');
+      const passwordGroup = passwordInput.closest('.form-group');
+      
+      console.log('Opening modal, currentUser:', currentUser);
+      
+      if (currentUser) {
+        // Google authenticated user - use custom nickname if available
+        const customNickname = localStorage.getItem(`nickname_${currentUser.uid}`);
+        authorInput.value = customNickname || currentUser.displayName || currentUser.email;
+        authorInput.disabled = true;
+        passwordGroup.style.display = 'none';
+        passwordInput.required = false; // Remove required attribute
+        console.log('User is logged in, hiding password field');
+      } else {
+        // Guest user
+        authorInput.disabled = false;
+        passwordGroup.style.display = 'block';
+        passwordInput.required = true; // Add required attribute
+        loadSavedUserData();
+        console.log('User is guest, showing password field');
+      }
+      
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Close new post modal
+    function closeNewPostModal() {
+      const modal = document.getElementById('new-post-modal');
+      const form = document.getElementById('new-post-form');
+      const authorInput = document.getElementById('post-author');
+      const passwordInput = document.getElementById('post-password');
+      const passwordGroup = passwordInput.closest('.form-group');
+      
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      form.reset();
+      
+      // Reset form state
+      authorInput.disabled = false;
+      passwordGroup.style.display = 'block';
+      passwordInput.required = true; // Reset required attribute
+    }
+
+    // Nickname Modal Functions
+    function openNicknameModal() {
+      if (!currentUser) return;
+      
+      const modal = document.getElementById('nickname-modal');
+      const nicknameInput = document.getElementById('nickname-input');
+      
+      // Load current custom nickname or display name
+      const savedNickname = localStorage.getItem(`nickname_${currentUser.uid}`) || currentUser.displayName || currentUser.email;
+      nicknameInput.value = savedNickname;
+      
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      nicknameInput.focus();
+    }
+
+    function closeNicknameModal() {
+      const modal = document.getElementById('nickname-modal');
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    async function saveNickname() {
+      if (!currentUser) return;
+      
+      const nicknameInput = document.getElementById('nickname-input');
+      const newNickname = nicknameInput.value.trim();
+      
+      if (!newNickname) {
+        alert('Please enter a display name');
+        return;
+      }
+      
+      if (newNickname.length > 30) {
+        alert('Display name must be 30 characters or less');
+        return;
+      }
+      
+      try {
+        // Save to local storage
+        localStorage.setItem(`nickname_${currentUser.uid}`, newNickname);
+        
+        // Save to Firebase if available
+        if (window.firebaseDb && window.firebaseRef && window.firebaseSet) {
+          const userRef = window.firebaseRef(window.firebaseDb, `users/${currentUser.uid}/nickname`);
+          await window.firebaseSet(userRef, newNickname);
+        }
+        
+        // Update display name in UI
+        const userName = document.getElementById('user-name');
+        userName.textContent = newNickname;
+        
+        // Update all existing posts and replies by this user
+        try {
+          await updateUserPostsAndReplies(currentUser.uid, newNickname);
+          showSuccessMessage('Nickname updated successfully! All your posts and comments have been updated.', 'success');
+        } catch (updateError) {
+          console.error('Error updating posts:', updateError);
+          showSuccessMessage('Nickname updated, but some posts may not have been updated. Please refresh the page.', 'warning');
+        }
+        
+        // Close modal
+        closeNicknameModal();
+      } catch (error) {
+        console.error('Error saving nickname:', error);
+        alert('Failed to save nickname. Please try again.');
+      }
+    }
+
+    // Update all posts and replies when user changes nickname
+    async function updateUserPostsAndReplies(userId, newNickname) {
+      try {
+        // Update local posts data
+        allPosts.forEach(post => {
+          if (post.googleId === userId) {
+            post.author = newNickname;
+            
+            // Update replies within this post
+            if (post.repliesList && Array.isArray(post.repliesList)) {
+              post.repliesList.forEach(reply => {
+                if (reply.googleId === userId) {
+                  reply.author = newNickname;
+                }
+              });
+            }
+          } else {
+            // Check replies in posts by other users
+            if (post.repliesList && Array.isArray(post.repliesList)) {
+              post.repliesList.forEach(reply => {
+                if (reply.googleId === userId) {
+                  reply.author = newNickname;
+                }
+              });
+            }
+          }
+        });
+
+        // Update Firebase if available
+        if (window.firebaseDb && window.firebaseRef && window.firebaseSet) {
+          const postsRef = window.firebaseRef(window.firebaseDb, 'posts');
+          await window.firebaseSet(postsRef, allPosts);
+        }
+
+        // Update localStorage
+        localStorage.setItem('communityPosts', JSON.stringify(allPosts));
+
+        // Update UI - re-render all posts to reflect the changes
+        displayPosts(allPosts);
+
+        console.log(`Updated ${userId}'s nickname to "${newNickname}" across all posts and replies`);
+      } catch (error) {
+        console.error('Error updating posts and replies:', error);
+        throw error; // Re-throw so the calling function can handle it
+      }
+    }
+
+    // Apply saved nicknames to all posts and replies on page load
+    function applySavedNicknamesToPosts() {
+      // Get all unique Google user IDs from posts and replies
+      const googleUserIds = new Set();
+      
+      allPosts.forEach(post => {
+        if (post.googleId) {
+          googleUserIds.add(post.googleId);
+        }
+        if (post.repliesList && Array.isArray(post.repliesList)) {
+          post.repliesList.forEach(reply => {
+            if (reply.googleId) {
+              googleUserIds.add(reply.googleId);
+            }
+          });
+        }
+      });
+
+      // Apply saved nicknames for each user
+      let hasUpdates = false;
+      googleUserIds.forEach(userId => {
+        const savedNickname = localStorage.getItem(`nickname_${userId}`);
+        if (savedNickname) {
+          allPosts.forEach(post => {
+            if (post.googleId === userId && post.author !== savedNickname) {
+              post.author = savedNickname;
+              hasUpdates = true;
+            }
+            if (post.repliesList && Array.isArray(post.repliesList)) {
+              post.repliesList.forEach(reply => {
+                if (reply.googleId === userId && reply.author !== savedNickname) {
+                  reply.author = savedNickname;
+                  hasUpdates = true;
+                }
+              });
+            }
+          });
+        }
+      });
+
+      // Update localStorage if there were changes
+      if (hasUpdates) {
+        localStorage.setItem('communityPosts', JSON.stringify(allPosts));
+        console.log('Applied saved nicknames to posts and replies');
+      }
+    }
+
+    // Translation Functions
+    async function translateText(text, targetLang = 'en') {
+      try {
+        if (!text || text.trim() === '') return '';
+        
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          throw new Error('Translation failed');
+        }
+        
+        const result = await response.json();
+        
+        // Extract translated text from the response
+        if (result && result[0] && result[0][0] && result[0][0][0]) {
+          return result[0][0][0];
+        }
+        
+        return text; // Return original if translation fails
+      } catch (error) {
+        console.error('Translation error:', error);
+        return text; // Return original text on error
+      }
+    }
+
+    // Translate post content when creating a new post
+    async function translatePostContent(post) {
+      try {
+        const translatedTitle = await translateText(post.title, 'en');
+        const translatedContent = await translateText(post.content, 'en');
+        
+        return {
+          ...post,
+          titleEn: translatedTitle,
+          contentEn: translatedContent
+        };
+      } catch (error) {
+        console.error('Error translating post:', error);
+        return post; // Return original post if translation fails
+      }
+    }
+
+    // Translate reply content when creating a new reply
+    async function translateReplyContent(reply) {
+      try {
+        const translatedContent = await translateText(reply.content, 'en');
+        
+        return {
+          ...reply,
+          contentEn: translatedContent
+        };
+      } catch (error) {
+        console.error('Error translating reply:', error);
+        return reply; // Return original reply if translation fails
+      }
+    }
+
+    // Translation Toggle Functions
+    function togglePostTranslation(postId) {
+      const post = allPosts.find(p => p.id === postId);
+      if (!post || !post.titleEn || !post.contentEn) return;
+      
+      console.log('Toggle post translation for:', postId);
+      
+      // Check if post detail modal is open
+      const modal = document.getElementById('post-detail-modal');
+      const isModalOpen = modal && modal.style.display === 'block';
+      
+      let titleElement, contentElement, translateBtn;
+      
+      if (isModalOpen) {
+        // Modal is open - use modal-specific selectors
+        console.log('Modal is open, using modal selectors');
+        titleElement = document.querySelector('#post-detail-modal .post-detail-title');
+        contentElement = document.querySelector('#post-detail-modal .post-detail-content');
+        translateBtn = document.querySelector('#post-detail-modal .post-translate-section .translate-btn');
+      } else {
+        // Modal is closed - use post list selectors
+        console.log('Modal is closed, using post list selectors');
+        titleElement = document.querySelector(`#post-${postId} .post-title`);
+        contentElement = document.querySelector(`#post-${postId} .post-content`);
+        translateBtn = document.querySelector(`#post-${postId} .translate-btn`);
+      }
+      
+      console.log('Found elements:', { 
+        titleElement: !!titleElement, 
+        contentElement: !!contentElement, 
+        translateBtn: !!translateBtn 
+      });
+      
+      if (!titleElement || !contentElement || !translateBtn) {
+        console.error('Translation elements not found for post:', postId);
+        return;
+      }
+      
+      const isTranslated = translateBtn.classList.contains('active');
+      console.log('Is currently translated:', isTranslated);
+      
+      if (isTranslated) {
+        // Show original
+        titleElement.textContent = post.title;
+        contentElement.textContent = post.content;
+        translateBtn.classList.remove('active');
+        translateBtn.innerHTML = '<span class="translate-btn-icon">🌐</span> Translate';
+        console.log('Switched to original content');
+      } else {
+        // Show translation
+        titleElement.textContent = post.titleEn;
+        contentElement.textContent = post.contentEn;
+        translateBtn.classList.add('active');
+        translateBtn.innerHTML = '<span class="translate-btn-icon">↩️</span> Original';
+        console.log('Switched to translated content');
+      }
+    }
+
+    async function toggleReplyTranslation(replyId, postId) {
+      console.log('=== Reply Translation Clicked ===');
+      console.log('ReplyID:', replyId, 'PostID:', postId);
+      
+      try {
+        // Wait for DOM to be ready
+        await new Promise(resolve => setTimeout(resolve, 50));
+        
+        // Try to find elements with direct selectors first
+        let contentElement = document.getElementById(`reply-content-${replyId}`);
+        let replyContainer = document.getElementById(`reply-${replyId}`);
+        let translateBtn = replyContainer?.querySelector('.translate-btn');
+        
+        console.log('Direct search:', {
+          contentElement: !!contentElement,
+          replyContainer: !!replyContainer,
+          translateBtn: !!translateBtn
+        });
+        
+        // If not found, search within modal
+        if (!contentElement || !translateBtn) {
+          console.log('Searching within modal...');
+          const modal = document.getElementById('post-detail-modal');
+          if (modal) {
+            contentElement = modal.querySelector(`#reply-content-${replyId}`);
+            replyContainer = modal.querySelector(`#reply-${replyId}`);
+            translateBtn = replyContainer?.querySelector('.translate-btn');
+            
+            console.log('Modal search:', {
+              contentElement: !!contentElement,
+              replyContainer: !!replyContainer,
+              translateBtn: !!translateBtn
+            });
+          }
+        }
+        
+        if (!contentElement || !translateBtn) {
+          console.error('Could not find reply elements');
+          alert('Translation elements not found. Please try again.');
+          return;
+        }
+        
+        // Find reply data
+        let reply = null;
+        
+        // First try to get from current replies (most reliable)
+        if (currentReplies[postId]) {
+          reply = currentReplies[postId].find(r => r.id === replyId);
+          console.log('Found reply in currentReplies:', !!reply);
+        }
+        
+        // If not found, try localStorage
+        if (!reply) {
+          const replies = JSON.parse(localStorage.getItem(`replies_${postId}`) || '[]');
+          reply = replies.find(r => r.id === replyId);
+          console.log('Found reply in localStorage:', !!reply);
+        }
+        
+        // If not found and Firebase is available, try Firebase
+        if (!reply && window.firebaseDB) {
+          try {
+            const replyRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}/${replyId}`);
+            const snapshot = await new Promise((resolve) => {
+              window.firebaseOnValue(replyRef, resolve, { once: true });
+            });
+            reply = snapshot.val();
+            if (reply) {
+              reply.id = replyId; // Make sure ID is set
+              console.log('Found reply in Firebase:', !!reply);
+            }
+          } catch (error) {
+            console.error('Error loading reply from Firebase:', error);
+          }
+        }
+        
+        if (!reply) {
+          console.error('Reply data not found');
+          alert('Reply data not found. Please refresh the page.');
+          return;
+        }
+        
+        console.log('Reply data found:', {
+          hasContent: !!reply.content,
+          hasTranslation: !!reply.contentEn,
+          content: reply.content?.substring(0, 50) + '...'
+        });
+        
+        const isCurrentlyTranslated = translateBtn.classList.contains('active');
+        console.log('Currently translated:', isCurrentlyTranslated);
+        
+        // If no translation exists, create one
+        if (!reply.contentEn && !isCurrentlyTranslated) {
+          console.log('Creating new translation...');
+          
+          // Show loading state
+          translateBtn.innerHTML = '<span class="translate-btn-icon">⏳</span> Loading...';
+          translateBtn.style.opacity = '0.7';
+          
+          try {
+            const translatedText = await translateText(reply.content, 'en');
+            console.log('Translation successful:', translatedText.substring(0, 50) + '...');
+            
+            // Save translation
+            reply.contentEn = translatedText;
+            
+            // Update current replies cache
+            if (currentReplies[postId]) {
+              const replyIndex = currentReplies[postId].findIndex(r => r.id === replyId);
+              if (replyIndex !== -1) {
+                currentReplies[postId][replyIndex].contentEn = translatedText;
+              }
+            }
+            
+            // Update localStorage
+            const replies = JSON.parse(localStorage.getItem(`replies_${postId}`) || '[]');
+            const replyIndex = replies.findIndex(r => r.id === replyId);
+            if (replyIndex !== -1) {
+              replies[replyIndex].contentEn = translatedText;
+              localStorage.setItem(`replies_${postId}`, JSON.stringify(replies));
+            }
+            
+            // Update Firebase if available
+            if (window.firebaseDB) {
+              try {
+                const replyRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}/${replyId}`);
+                await window.firebaseUpdate(replyRef, { contentEn: translatedText });
+              } catch (error) {
+                console.error('Error updating Firebase:', error);
+              }
+            }
+            
+            // Show translation
+            contentElement.textContent = translatedText;
+            translateBtn.classList.add('active');
+            translateBtn.innerHTML = '<span class="translate-btn-icon">↩️</span> Original';
+            translateBtn.style.opacity = '1';
+            
+            console.log('Translation displayed successfully');
+            
+          } catch (error) {
+            console.error('Translation failed:', error);
+            translateBtn.innerHTML = '<span class="translate-btn-icon">❌</span> Failed';
+            setTimeout(() => {
+              translateBtn.innerHTML = '<span class="translate-btn-icon">🌐</span> EN';
+              translateBtn.style.opacity = '1';
+            }, 2000);
+          }
+          return;
+        }
+        
+        // Toggle between original and translation
+        if (isCurrentlyTranslated) {
+          // Show original
+          contentElement.textContent = reply.content;
+          translateBtn.classList.remove('active');
+          translateBtn.innerHTML = '<span class="translate-btn-icon">🌐</span> EN';
+          console.log('Switched to original');
+        } else {
+          // Show translation
+          contentElement.textContent = reply.contentEn;
+          translateBtn.classList.add('active');
+          translateBtn.innerHTML = '<span class="translate-btn-icon">↩️</span> Original';
+          console.log('Switched to translation');
+        }
+        
+      } catch (error) {
+        console.error('Error in toggleReplyTranslation:', error);
+        alert('Translation error: ' + error.message);
+      }
+    }
+
+
+    // Add translations to existing posts that don't have them
+    async function addTranslationsToExistingPosts() {
+      let hasUpdates = false;
+      
+      for (const post of allPosts) {
+        // Add translation to posts without translation
+        if (!post.titleEn || !post.contentEn) {
+          try {
+            console.log(`Adding translation to post: ${post.title.substring(0, 30)}...`);
+            const translatedTitle = await translateText(post.title, 'en');
+            const translatedContent = await translateText(post.content, 'en');
+            
+            post.titleEn = translatedTitle;
+            post.contentEn = translatedContent;
+            hasUpdates = true;
+            
+            // Small delay to avoid rate limiting
+            await new Promise(resolve => setTimeout(resolve, 500));
+          } catch (error) {
+            console.error('Error translating existing post:', error);
+          }
+        }
+        
+        // Add translation to replies without translation
+        if (post.repliesList && Array.isArray(post.repliesList)) {
+          for (const reply of post.repliesList) {
+            if (!reply.contentEn) {
+              try {
+                console.log(`Adding translation to reply: ${reply.content.substring(0, 30)}...`);
+                const translatedContent = await translateText(reply.content, 'en');
+                reply.contentEn = translatedContent;
+                hasUpdates = true;
+                
+                // Small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 500));
+              } catch (error) {
+                console.error('Error translating existing reply:', error);
+              }
+            }
+          }
+        }
+      }
+      
+      // Also check localStorage replies for each post
+      for (const post of allPosts) {
+        const localReplies = JSON.parse(localStorage.getItem(`replies_${post.id}`) || '[]');
+        let localRepliesUpdated = false;
+        
+        for (const reply of localReplies) {
+          if (!reply.contentEn) {
+            try {
+              console.log(`Adding translation to local reply: ${reply.content.substring(0, 30)}...`);
+              const translatedContent = await translateText(reply.content, 'en');
+              reply.contentEn = translatedContent;
+              localRepliesUpdated = true;
+              hasUpdates = true;
+              
+              // Small delay to avoid rate limiting
+              await new Promise(resolve => setTimeout(resolve, 500));
+            } catch (error) {
+              console.error('Error translating existing local reply:', error);
+            }
+          }
+        }
+        
+        if (localRepliesUpdated) {
+          localStorage.setItem(`replies_${post.id}`, JSON.stringify(localReplies));
+        }
+      }
+      
+      if (hasUpdates) {
+        // Update Firebase if available
+        if (window.firebaseDb && window.firebaseRef && window.firebaseSet) {
+          try {
+            const postsRef = window.firebaseRef(window.firebaseDb, 'posts');
+            await window.firebaseSet(postsRef, allPosts);
+          } catch (error) {
+            console.error('Error updating Firebase with translations:', error);
+          }
+        }
+        
+        // Update localStorage
+        localStorage.setItem('communityPosts', JSON.stringify(allPosts));
+        
+        // Refresh the display
+        displayPosts();
+        
+        console.log('Added translations to existing posts and replies');
+        showSuccessMessage('Translations added to existing posts!', 'success');
+      }
+    }
+
+    // Submit new post
+    document.getElementById('new-post-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      console.log('Form submitted, currentUser:', currentUser);
+      
+      const author = document.getElementById('post-author').value.trim();
+      const password = document.getElementById('post-password').value.trim();
+      const category = document.getElementById('post-category').value;
+      const title = document.getElementById('post-title').value.trim();
+      const content = document.getElementById('post-content').value.trim();
+      
+      console.log('Form values:', { author, category, title, content, hasPassword: !!password });
+      
+      if (!author || !category || !title || !content) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+      
+      if (!currentUser && !password) {
+        alert('Password is required for guest users.');
+        return;
+      }
+      
+      let post;
+      
+      if (currentUser) {
+        // Google authenticated user
+        post = {
+          author: author,
+          googleId: currentUser.uid,
+          googleEmail: currentUser.email,
+          googlePhoto: currentUser.photoURL,
+          isVerified: true,
+          category: category,
+          title: title,
+          content: content,
+          timestamp: Date.now(),
+          replies: 0,
+          likes: 0
+        };
+      } else {
+        // Guest user
+        localStorage.setItem('communityUsername', author);
+        post = {
+          author: author,
+          password: await hashPassword(password),
+          isVerified: false,
+          category: category,
+          title: title,
+          content: content,
+          timestamp: Date.now(),
+          replies: 0,
+          likes: 0
+        };
+      }
+      
+      console.log('Creating post:', post);
+      
+      try {
+        // Add translation to the post
+        console.log('Translating post content...');
+        const translatedPost = await translatePostContent(post);
+        console.log('Translation completed:', { 
+          originalTitle: post.title, 
+          translatedTitle: translatedPost.titleEn,
+          originalContent: post.content.substring(0, 50) + '...',
+          translatedContent: translatedPost.contentEn?.substring(0, 50) + '...'
+        });
+        
+        if (window.firebaseDB) {
+          console.log('Uploading to Firebase...');
+          const postsRef = window.firebaseRef(window.firebaseDB, 'communityPosts');
+          const result = await window.firebasePush(postsRef, translatedPost);
+          console.log('Firebase upload successful:', result);
+          showSuccessMessage('Post created and translated successfully!', 'success');
+        } else {
+          console.log('Saving to local storage...');
+          savePostLocal(translatedPost);
+          showSuccessMessage('Post created and translated successfully!', 'success');
+        }
+        
+        closeNewPostModal();
+        loadCommunityPosts();
+      } catch (error) {
+        console.error('Error creating post:', error);
+        alert('Failed to create post. Please try again.');
+      }
+    });
+
+    // Save post to local storage
+    function savePostLocal(post) {
+      const posts = JSON.parse(localStorage.getItem('communityPosts') || '[]');
+      post.id = 'local_' + Date.now();
+      posts.unshift(post);
+      
+      // Keep only 100 most recent posts
+      if (posts.length > 100) {
+        posts.splice(100);
+      }
+      
+      localStorage.setItem('communityPosts', JSON.stringify(posts));
+    }
+
+    // Load community posts
+    function loadCommunityPosts() {
+      const postsContainer = document.getElementById('posts-list');
+      
+      if (window.firebaseDB) {
+        const postsRef = window.firebaseRef(window.firebaseDB, 'communityPosts');
+        const postsQuery = window.firebaseQuery(postsRef, window.firebaseLimitToLast(50));
+        
+        window.firebaseOnValue(postsQuery, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            allPosts = Object.entries(data).map(([key, value]) => ({
+              id: key,
+              ...value
+            })).sort((a, b) => b.timestamp - a.timestamp);
+          } else {
+            allPosts = [];
+          }
+          applySavedNicknamesToPosts();
+          displayPosts();
+          updateStats();
+          
+          // Add translations to existing posts that don't have them
+          setTimeout(() => {
+            addTranslationsToExistingPosts();
+          }, 2000); // Wait 2 seconds before starting translation process
+        });
+      } else {
+        // Load from local storage
+        allPosts = JSON.parse(localStorage.getItem('communityPosts') || '[]');
+        applySavedNicknamesToPosts();
+        displayPosts();
+        updateStats();
+        
+        // Add translations to existing posts that don't have them
+        setTimeout(() => {
+          addTranslationsToExistingPosts();
+        }, 2000); // Wait 2 seconds before starting translation process
+      }
+    }
+
+    // Display posts
+    function displayPosts() {
+      const postsContainer = document.getElementById('posts-list');
+      
+      let filteredPosts = allPosts;
+      if (currentFilter !== 'all') {
+        filteredPosts = allPosts.filter(post => post.category === currentFilter);
+      }
+      
+      if (filteredPosts.length === 0) {
+        postsContainer.innerHTML = `
+          <div class="no-posts">
+            <div class="no-posts-icon">📝</div>
+            <h3>No posts yet</h3>
+            <p>Be the first to start a conversation!</p>
+          </div>
+        `;
+        return;
+      }
+      
+      postsContainer.innerHTML = filteredPosts.map(post => `
+        <div class="post-item" id="post-${post.id}" onclick="openPostDetail('${post.id}')">
+          <div class="post-header">
+            <div class="post-author">
+              ${post.googleId ? generatePatternAvatar(post.googleId, 20) : ''}
+              <span>${escapeHtml(post.author)}</span>
+            </div>
+            <div class="post-time">${formatTime(post.timestamp)}</div>
+          </div>
+          <div class="post-category category-${post.category}">
+            ${getCategoryLabel(post.category)}
+          </div>
+          <h4 class="post-title">${escapeHtml(post.title)}</h4>
+          <div class="post-content post-preview">${escapeHtml(post.content.substring(0, 150))}${post.content.length > 150 ? '...' : ''}</div>
+          ${post.edited ? `<div class="post-edited">✏️ Edited ${formatTime(post.editedAt)}</div>` : ''}
+          <div class="post-footer">
+            <div class="post-action" onclick="event.stopPropagation(); openPostDetail('${post.id}')">
+              <span class="action-icon">💬</span>
+              <span>${post.replies || 0} replies</span>
+            </div>
+            <div class="post-action ${isLiked(post.id) ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${post.id}')">
+              <span class="action-icon">${isLiked(post.id) ? '❤️' : '👍'}</span>
+              <span>${post.likes || 0} likes</span>
+            </div>
+            <div class="post-stat">
+              <span>👁️</span>
+              <span>${post.views || 0} views</span>
+            </div>
+            ${post.titleEn && post.contentEn ? `
+              <div class="translate-btn" onclick="event.stopPropagation(); togglePostTranslation('${post.id}')">
+                <span class="translate-btn-icon">🌐</span>
+                <span>Translate</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update statistics
+    function updateStats() {
+      const totalPosts = allPosts.length;
+      const uniqueAuthors = new Set(allPosts.map(post => post.author)).size;
+      const today = new Date().toDateString();
+      const todayPosts = allPosts.filter(post => new Date(post.timestamp).toDateString() === today).length;
+      
+      document.getElementById('total-posts').textContent = totalPosts;
+      document.getElementById('total-members').textContent = uniqueAuthors;
+      document.getElementById('recent-activity').textContent = todayPosts;
+      
+      // Update category counts
+      const categoryCounts = allPosts.reduce((acc, post) => {
+        acc[post.category] = (acc[post.category] || 0) + 1;
+        return acc;
+      }, {});
+      
+      document.getElementById('count-all').textContent = totalPosts;
+      document.getElementById('count-question').textContent = categoryCounts.question || 0;
+      document.getElementById('count-experience').textContent = categoryCounts.experience || 0;
+      document.getElementById('count-job').textContent = categoryCounts.job || 0;
+      document.getElementById('count-general').textContent = categoryCounts.general || 0;
+    }
+
+    // Filter posts by category
+    function filterByCategory(category) {
+      currentFilter = category;
+      displayPosts();
+      
+      // Update active category visual feedback
+      document.querySelectorAll('.category-list li').forEach(li => {
+        li.style.background = 'transparent';
+        li.style.color = '';
+      });
+      
+      event.currentTarget.style.background = 'rgba(102, 126, 234, 0.1)';
+      event.currentTarget.style.color = '#667eea';
+    }
+
+    // Get category label
+    function getCategoryLabel(category) {
+      const labels = {
+        question: '❓ Question',
+        experience: '💼 Work Experience',
+        job: '🎯 Job Opportunity',
+        general: '💬 General Discussion'
+      };
+      return labels[category] || category;
+    }
+
+    // Format time
+    function formatTime(timestamp) {
+      const now = Date.now();
+      const diff = now - timestamp;
+      const minutes = Math.floor(diff / 60000);
+      const hours = Math.floor(diff / 3600000);
+      const days = Math.floor(diff / 86400000);
+      
+      if (minutes < 1) return 'Just now';
+      if (minutes < 60) return `${minutes}m ago`;
+      if (hours < 24) return `${hours}h ago`;
+      if (days < 7) return `${days}d ago`;
+      return new Date(timestamp).toLocaleDateString();
+    }
+
+    // Escape HTML
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Success message (reuse from main site)
+    function showSuccessMessage(message, type = 'success') {
+      const existingMsg = document.getElementById('success-message');
+      if (existingMsg) existingMsg.remove();
+      
+      const colors = {
+        success: 'linear-gradient(135deg, #4CAF50, #45a049)',
+        edit: 'linear-gradient(135deg, #FF9800, #F57C00)',
+        delete: 'linear-gradient(135deg, #f44336, #d32f2f)',
+        info: 'linear-gradient(135deg, #2196F3, #1976D2)'
+      };
+      
+      const icons = { success: '✅', edit: '✏️', delete: '🗑️', info: 'ℹ️' };
+      
+      const messageDiv = document.createElement('div');
+      messageDiv.id = 'success-message';
+      messageDiv.innerHTML = `<span class="message-icon">${icons[type]}</span><span class="message-text">${message}</span>`;
+      messageDiv.style.cssText = `
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: ${colors[type]}; color: white; padding: 15px 25px;
+        border-radius: 10px; font-size: 14px; font-family: Arial, sans-serif;
+        font-weight: 500; z-index: 10001; box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        animation: successFadeInOut 3s ease-in-out; display: flex;
+        align-items: center; gap: 8px; min-width: 200px; text-align: center;
+      `;
+      
+      document.body.appendChild(messageDiv);
+      setTimeout(() => messageDiv.remove(), 3000);
+    }
+
+    // Check if user liked a post
+    function isLiked(postId) {
+      const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
+      return likedPosts.includes(postId);
+    }
+
+    // Check if user liked a reply
+    function isReplyLiked(replyId) {
+      const likedReplies = JSON.parse(localStorage.getItem('likedReplies') || '[]');
+      return likedReplies.includes(replyId);
+    }
+
+    // Toggle like/unlike
+    async function toggleLike(postId) {
+      const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
+      const post = allPosts.find(p => p.id === postId);
+      if (!post) return;
+      
+      const isCurrentlyLiked = likedPosts.includes(postId);
+      
+      // Immediate UI feedback for modal like button
+      const modalLikeButton = document.querySelector('#post-detail-modal .post-action[onclick*="toggleLike"]');
+      const modalLikeIcon = modalLikeButton?.querySelector('.action-icon');
+      const modalLikeText = modalLikeButton?.querySelector('span:last-child');
+      
+      if (modalLikeButton && modalLikeIcon && modalLikeText) {
+        const currentCount = parseInt(modalLikeText.textContent.match(/\\d+/)?.[0]) || 0;
+        const newCount = Math.max(0, currentCount + (isCurrentlyLiked ? -1 : 1));
+        
+        if (isCurrentlyLiked) {
+          // 좋아요 취소
+          modalLikeButton.classList.remove('liked');
+          modalLikeIcon.textContent = '👍';
+          modalLikeText.textContent = `${newCount} likes`;
+        } else {
+          // 좋아요 추가
+          modalLikeButton.classList.add('liked');
+          modalLikeIcon.textContent = '❤️';
+          modalLikeText.textContent = `${newCount} likes`;
+          // Add heartbeat animation
+          modalLikeIcon.style.animation = 'likeHeartbeat 0.6s ease';
+          setTimeout(() => {
+            modalLikeIcon.style.animation = '';
+          }, 600);
+        }
+      }
+      
+      try {
+        if (window.firebaseDB) {
+          const postRef = window.firebaseRef(window.firebaseDB, `communityPosts/${postId}/likes`);
+          const newLikeCount = (post.likes || 0) + (isCurrentlyLiked ? -1 : 1);
+          await window.firebaseSet(postRef, Math.max(0, newLikeCount));
+        } else {
+          // Update local storage
+          const posts = JSON.parse(localStorage.getItem('communityPosts') || '[]');
+          const postIndex = posts.findIndex(p => p.id === postId);
+          if (postIndex !== -1) {
+            posts[postIndex].likes = Math.max(0, (posts[postIndex].likes || 0) + (isCurrentlyLiked ? -1 : 1));
+            localStorage.setItem('communityPosts', JSON.stringify(posts));
+          }
+        }
+        
+        // Update user's liked posts
+        if (isCurrentlyLiked) {
+          const index = likedPosts.indexOf(postId);
+          if (index > -1) likedPosts.splice(index, 1);
+        } else {
+          likedPosts.push(postId);
+        }
+        localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
+        
+        // Reload posts to reflect changes
+        loadCommunityPosts();
+        
+      } catch (error) {
+        console.error('Error toggling like:', error);
+        showSuccessMessage('Failed to update like. Please try again.', 'info');
+      }
+    }
+
+    // Toggle reply like/unlike with immediate feedback  
+    async function toggleReplyLike(replyId, postId) {
+      const likedReplies = JSON.parse(localStorage.getItem('likedReplies') || '[]');
+      const isCurrentlyLiked = likedReplies.includes(replyId);
+      
+      // Immediate UI feedback
+      const replyElement = document.getElementById(`reply-${replyId}`);
+      const likeButton = replyElement?.querySelector('.reply-like');
+      const likeIcon = likeButton?.querySelector('.reply-like-icon');
+      const likeCount = likeButton?.querySelector('.reply-like-count');
+      
+      if (likeButton && likeIcon && likeCount) {
+        // Update UI immediately for better UX
+        const currentCount = parseInt(likeCount.textContent) || 0;
+        const newCount = Math.max(0, currentCount + (isCurrentlyLiked ? -1 : 1));
+        
+        likeCount.textContent = newCount;
+        
+        if (isCurrentlyLiked) {
+          // 좋아요 취소: 빨간색 → 회색, 하트 → 엄지
+          likeButton.classList.remove('liked');
+          likeIcon.textContent = '👍';
+        } else {
+          // 좋아요 추가: 회색 → 빨간색, 엄지 → 하트
+          likeButton.classList.add('liked');
+          likeIcon.textContent = '❤️';
+          // Add heartbeat animation
+          likeIcon.style.animation = 'likeHeartbeat 0.6s ease';
+          setTimeout(() => {
+            likeIcon.style.animation = '';
+          }, 600);
+        }
+        
+        // Update user's liked replies immediately
+        if (isCurrentlyLiked) {
+          const index = likedReplies.indexOf(replyId);
+          if (index > -1) likedReplies.splice(index, 1);
+        } else {
+          likedReplies.push(replyId);
+        }
+        localStorage.setItem('likedReplies', JSON.stringify(likedReplies));
+      }
+      
+      try {
+        let reply;
+        if (window.firebaseDB) {
+          // Get current reply from Firebase
+          const replyRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}/${replyId}`);
+          const snapshot = await new Promise((resolve) => {
+            window.firebaseOnValue(replyRef, resolve, { once: true });
+          });
+          reply = snapshot.val();
+        } else {
+          // Get reply from local storage
+          const replies = JSON.parse(localStorage.getItem(`replies_${postId}`) || '[]');
+          reply = replies.find(r => r.id === replyId);
+        }
+        
+        if (!reply) {
+          console.error('Reply not found for like update');
+          return;
+        }
+        
+        if (window.firebaseDB) {
+          const replyRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}/${replyId}/likes`);
+          const newLikeCount = (reply.likes || 0) + (isCurrentlyLiked ? -1 : 1);
+          await window.firebaseSet(replyRef, Math.max(0, newLikeCount));
+        } else {
+          // Update local storage
+          const replies = JSON.parse(localStorage.getItem(`replies_${postId}`) || '[]');
+          const replyIndex = replies.findIndex(r => r.id === replyId);
+          if (replyIndex !== -1) {
+            replies[replyIndex].likes = Math.max(0, (replies[replyIndex].likes || 0) + (isCurrentlyLiked ? -1 : 1));
+            localStorage.setItem(`replies_${postId}`, JSON.stringify(replies));
+          }
+        }
+        
+      } catch (error) {
+        console.error('Error toggling reply like:', error);
+        
+        // Revert UI and localStorage changes on error
+        if (likeButton && likeIcon && likeCount) {
+          const currentCount = parseInt(likeCount.textContent) || 0;
+          const revertedCount = Math.max(0, currentCount + (isCurrentlyLiked ? 1 : -1));
+          
+          likeCount.textContent = revertedCount;
+          
+          if (isCurrentlyLiked) {
+            // 원래 좋아요 상태였으므로 다시 빨간색 하트로
+            likeButton.classList.add('liked');
+            likeIcon.textContent = '❤️';
+          } else {
+            // 원래 좋아요 안한 상태였으므로 다시 회색 엄지로
+            likeButton.classList.remove('liked');
+            likeIcon.textContent = '👍';
+          }
+          
+          // Revert localStorage
+          const currentLikedReplies = JSON.parse(localStorage.getItem('likedReplies') || '[]');
+          if (isCurrentlyLiked) {
+            if (!currentLikedReplies.includes(replyId)) {
+              currentLikedReplies.push(replyId);
+            }
+          } else {
+            const index = currentLikedReplies.indexOf(replyId);
+            if (index > -1) currentLikedReplies.splice(index, 1);
+          }
+          localStorage.setItem('likedReplies', JSON.stringify(currentLikedReplies));
+        }
+        
+        showSuccessMessage('Failed to update like. Please try again.', 'info');
+      }
+    }
+
+    // Open post detail modal
+    function openPostDetail(postId) {
+      const post = allPosts.find(p => p.id === postId);
+      if (!post) return;
+      
+      // Store current post ID
+      currentOpenPostId = postId;
+      
+      // Update view count
+      updatePostViews(postId);
+      
+      const modal = document.getElementById('post-detail-modal');
+      const content = document.getElementById('post-detail-content');
+      
+      content.innerHTML = `
+        <div class="post-detail-header" id="post-${post.id}">
+          <div class="post-detail-category category-${post.category}">
+            ${getCategoryLabel(post.category)}
+          </div>
+          <h2 class="post-detail-title post-title">${escapeHtml(post.title)}</h2>
+          <div class="post-detail-meta">
+            <span class="post-author">
+              ${post.googleId ? generatePatternAvatar(post.googleId, 20) : ''}
+              <strong>${escapeHtml(post.author)}</strong>
+            </span>
+            <span>•</span>
+            <span>${formatTime(post.timestamp)}</span>
+            <span>•</span>
+            <span>${post.views || 0} views</span>
+          </div>
+        </div>
+        
+        <div class="post-detail-content post-content">
+          ${escapeHtml(post.content)}
+        </div>
+        ${post.titleEn && post.contentEn ? `
+          <div class="post-translate-section">
+            <div class="translate-btn" onclick="togglePostTranslation('${post.id}')">
+              <span class="translate-btn-icon">🌐</span>
+              <span>Translate</span>
+            </div>
+            <div class="translated-badge" style="display: none;">
+              <span>🌐</span>
+              <span>English Translation</span>
+            </div>
+          </div>
+        ` : ''}
+        ${post.edited ? `<div class="post-edited" style="margin-bottom: 15px;">✏️ Edited ${formatTime(post.editedAt)}</div>` : ''}
+        
+        <div class="post-detail-actions">
+          <div class="post-action ${isLiked(post.id) ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
+            <span class="action-icon">${isLiked(post.id) ? '❤️' : '👍'}</span>
+            <span>${post.likes || 0} likes</span>
+          </div>
+          <div class="post-action" onclick="editPost('${post.id}')" title="Edit post">
+            <span class="action-icon">✏️</span>
+            <span>Edit</span>
+          </div>
+          <div class="post-action" onclick="deletePost('${post.id}')" title="Delete post">
+            <span class="action-icon">🗑️</span>
+            <span>Delete</span>
+          </div>
+        </div>
+        
+        <div class="replies-section">
+          <div class="replies-header">
+            <span>💬</span>
+            <span>Replies (${post.replies || 0})</span>
+          </div>
+          
+          <div class="reply-form">
+            <div class="form-group" id="reply-author-group">
+              <input type="text" id="reply-author" class="form-input" placeholder="Your name" maxlength="30" required>
+            </div>
+            <div class="form-group" id="reply-password-group">
+              <input type="password" id="reply-password" class="form-input" placeholder="Password (for editing/deleting)" maxlength="50" required>
+            </div>
+            <div class="form-group">
+              <textarea id="reply-content" class="form-textarea" placeholder="Write your reply..." maxlength="1000" required style="min-height: 80px;"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" onclick="submitReply('${post.id}')">
+                💬 Add Reply
+              </button>
+            </div>
+          </div>
+          
+          <div id="replies-list">
+            <div class="loading">
+              <div class="loading-spinner"></div>
+              <p>Loading replies...</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Load saved reply user data and update form based on auth status
+      const replyAuthorInput = document.getElementById('reply-author');
+      const replyPasswordGroup = document.getElementById('reply-password-group');
+      
+      if (currentUser) {
+        // Google authenticated user - use custom nickname if available
+        const customNickname = localStorage.getItem(`nickname_${currentUser.uid}`);
+        replyAuthorInput.value = customNickname || currentUser.displayName || currentUser.email;
+        replyAuthorInput.disabled = true;
+        replyPasswordGroup.style.display = 'none';
+      } else {
+        // Guest user
+        replyAuthorInput.disabled = false;
+        replyPasswordGroup.style.display = 'block';
+        const savedName = localStorage.getItem('communityUsername');
+        if (savedName) {
+          replyAuthorInput.value = savedName;
+        }
+      }
+      
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      
+      // Load replies
+      loadPostReplies(postId);
+    }
+
+    // Close post detail modal
+    function closePostDetail() {
+      document.getElementById('post-detail-modal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    // Update post views
+    async function updatePostViews(postId) {
+      const post = allPosts.find(p => p.id === postId);
+      if (!post) return;
+      
+      try {
+        if (window.firebaseDB) {
+          const postRef = window.firebaseRef(window.firebaseDB, `communityPosts/${postId}/views`);
+          await window.firebaseSet(postRef, (post.views || 0) + 1);
+        } else {
+          // Update local storage
+          const posts = JSON.parse(localStorage.getItem('communityPosts') || '[]');
+          const postIndex = posts.findIndex(p => p.id === postId);
+          if (postIndex !== -1) {
+            posts[postIndex].views = (posts[postIndex].views || 0) + 1;
+            localStorage.setItem('communityPosts', JSON.stringify(posts));
+          }
+        }
+      } catch (error) {
+        console.error('Error updating views:', error);
+      }
+    }
+
+    // Submit reply
+    async function submitReply(postId) {
+      const author = document.getElementById('reply-author').value.trim();
+      const password = document.getElementById('reply-password').value.trim();
+      const content = document.getElementById('reply-content').value.trim();
+      
+      if (!author || !content) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+      
+      if (!currentUser && !password) {
+        alert('Password is required for guest users.');
+        return;
+      }
+      
+      let reply;
+      
+      if (currentUser) {
+        // Google authenticated user
+        reply = {
+          author: author,
+          googleId: currentUser.uid,
+          googleEmail: currentUser.email,
+          googlePhoto: currentUser.photoURL,
+          isVerified: true,
+          content: content,
+          timestamp: Date.now(),
+          likes: 0
+        };
+      } else {
+        // Guest user
+        localStorage.setItem('communityUsername', author);
+        reply = {
+          author: author,
+          password: await hashPassword(password),
+          isVerified: false,
+          content: content,
+          timestamp: Date.now(),
+          likes: 0
+        };
+      }
+      
+      try {
+        // Translate reply content
+        console.log('Translating reply content...');
+        const translatedReply = await translateReplyContent(reply);
+        console.log('Reply translation completed:', { 
+          originalContent: reply.content.substring(0, 50) + '...',
+          translatedContent: translatedReply.contentEn?.substring(0, 50) + '...'
+        });
+        
+        if (window.firebaseDB) {
+          // Add translated reply to Firebase
+          const repliesRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}`);
+          await window.firebasePush(repliesRef, translatedReply);
+          
+          // Update reply count
+          const post = allPosts.find(p => p.id === postId);
+          const postRef = window.firebaseRef(window.firebaseDB, `communityPosts/${postId}/replies`);
+          await window.firebaseSet(postRef, (post.replies || 0) + 1);
+        } else {
+          // Save translated reply to local storage
+          const replies = JSON.parse(localStorage.getItem(`replies_${postId}`) || '[]');
+          translatedReply.id = 'local_' + Date.now();
+          replies.push(translatedReply);
+          localStorage.setItem(`replies_${postId}`, JSON.stringify(replies));
+          
+          // Update reply count in posts
+          const posts = JSON.parse(localStorage.getItem('communityPosts') || '[]');
+          const postIndex = posts.findIndex(p => p.id === postId);
+          if (postIndex !== -1) {
+            posts[postIndex].replies = (posts[postIndex].replies || 0) + 1;
+            localStorage.setItem('communityPosts', JSON.stringify(posts));
+          }
+        }
+        
+        // Clear form
+        document.getElementById('reply-content').value = '';
+        document.getElementById('reply-password').value = '';
+        
+        showSuccessMessage('Reply added successfully!', 'success');
+        
+        // Reload replies and posts
+        loadPostReplies(postId);
+        loadCommunityPosts();
+        
+      } catch (error) {
+        console.error('Error submitting reply:', error);
+        alert('Failed to submit reply. Please try again.');
+      }
+    }
+
+    // Load post replies
+    function loadPostReplies(postId) {
+      const repliesContainer = document.getElementById('replies-list');
+      
+      if (window.firebaseDB) {
+        const repliesRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}`);
+        
+        window.firebaseOnValue(repliesRef, (snapshot) => {
+          const data = snapshot.val();
+          let replies = [];
+          
+          if (data) {
+            replies = Object.entries(data).map(([key, value]) => ({
+              id: key,
+              ...value
+            })).sort((a, b) => a.timestamp - b.timestamp);
+          }
+          
+          displayReplies(replies, repliesContainer, postId);
+        });
+      } else {
+        // Load from local storage
+        const replies = JSON.parse(localStorage.getItem(`replies_${postId}`) || '[]');
+        displayReplies(replies, repliesContainer, postId);
+      }
+    }
+
+    // Global variable to store current replies for translation access
+    let currentReplies = {};
+
+    // Display replies
+    function displayReplies(replies, container, postId) {
+      // Store replies in global variable for translation access
+      currentReplies[postId] = replies;
+      
+      if (replies.length === 0) {
+        container.innerHTML = `
+          <div class="no-replies">
+            <p>No replies yet. Be the first to reply!</p>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = replies.map(reply => `
+        <div class="reply-item" id="reply-${reply.id}">
+          <div class="reply-header">
+            <div class="reply-author">
+              ${reply.googleId ? generatePatternAvatar(reply.googleId, 18) : ''}
+              <span>${escapeHtml(reply.author)}</span>
+            </div>
+            <div class="reply-time">${formatTime(reply.timestamp)}</div>
+            <div class="reply-actions">
+              <button class="reply-action-btn" onclick="editReply('${reply.id}', '${postId}')" title="Edit reply">
+                ✏️
+              </button>
+              <button class="reply-action-btn" onclick="deleteReply('${reply.id}', '${postId}')" title="Delete reply">
+                🗑️
+              </button>
+            </div>
+          </div>
+          <div class="reply-content" id="reply-content-${reply.id}">${escapeHtml(reply.content)}</div>
+          ${reply.edited ? `<div class="reply-edited">✏️ Edited ${formatTime(reply.editedAt)}</div>` : ''}
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+            <div class="reply-like ${isReplyLiked(reply.id) ? 'liked' : ''}" onclick="toggleReplyLike('${reply.id}', '${postId}')">
+              <span class="reply-like-icon">${isReplyLiked(reply.id) ? '❤️' : '👍'}</span>
+              <span class="reply-like-count">${reply.likes || 0}</span>
+            </div>
+            <div class="translate-btn" onclick="toggleReplyTranslation('${reply.id}', '${postId}')">
+              <span class="translate-btn-icon">🌐</span>
+              <span>EN</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Store current post ID globally when modal opens
+    let currentOpenPostId = null;
+    
+    // Get current post ID from modal
+    function getCurrentPostId() {
+      return currentOpenPostId;
+    }
+
+    // Edit reply function
+    async function editReply(replyId, postId) {
+      try {
+        let reply;
+        if (window.firebaseDB) {
+          // Get reply from Firebase
+          const replyRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}/${replyId}`);
+          const snapshot = await new Promise((resolve, reject) => {
+            window.firebaseOnValue(replyRef, resolve, { once: true });
+          });
+          reply = snapshot.val();
+        } else {
+          // Get reply from local storage
+          const replies = JSON.parse(localStorage.getItem(`replies_${postId}`) || '[]');
+          reply = replies.find(r => r.id === replyId);
+        }
+        
+        if (!reply) {
+          alert('Reply not found.');
+          return;
+        }
+        
+        // Check permission
+        if (reply.googleId) {
+          // Google authenticated reply - check if current user is the author
+          if (!currentUser || currentUser.uid !== reply.googleId) {
+            alert('You can only edit your own replies.');
+            return;
+          }
+        } else {
+          // Guest reply - check password
+          const password = prompt('Enter password to edit this reply:');
+          if (!password) return;
+          
+          const hashedPassword = await hashPassword(password);
+          if (hashedPassword !== reply.password) {
+            alert('Incorrect password.');
+            return;
+          }
+        }
+        
+        // Get new content
+        const newContent = prompt('Edit your reply:', reply.content);
+        if (newContent === null) return;
+        if (newContent.trim() === '') {
+          alert('Reply content cannot be empty.');
+          return;
+        }
+        
+        // Update reply with new translation if content changed
+        let updatedReply = {
+          ...reply,
+          content: newContent.trim(),
+          edited: true,
+          editedAt: Date.now()
+        };
+
+        // Check if content changed, and update translation
+        if (reply.content !== newContent.trim()) {
+          try {
+            console.log('Reply content changed, updating translation...');
+            const translatedContent = await translateText(newContent.trim(), 'en');
+            
+            updatedReply.contentEn = translatedContent;
+            
+            // Update current replies cache if exists
+            if (currentReplies[postId]) {
+              const cacheIndex = currentReplies[postId].findIndex(r => r.id === replyId);
+              if (cacheIndex !== -1) {
+                currentReplies[postId][cacheIndex].contentEn = translatedContent;
+              }
+            }
+            
+            console.log('Reply translation updated successfully');
+          } catch (error) {
+            console.error('Failed to update reply translation:', error);
+            // Keep old translation if new one fails
+            updatedReply.contentEn = reply.contentEn;
+          }
+        }
+        
+        if (window.firebaseDB) {
+          const replyRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}/${replyId}`);
+          await window.firebaseSet(replyRef, updatedReply);
+        } else {
+          // Update local storage
+          const replies = JSON.parse(localStorage.getItem(`replies_${postId}`) || '[]');
+          const replyIndex = replies.findIndex(r => r.id === replyId);
+          if (replyIndex !== -1) {
+            replies[replyIndex] = updatedReply;
+            localStorage.setItem(`replies_${postId}`, JSON.stringify(replies));
+          }
+        }
+        
+        showSuccessMessage('Reply updated successfully!', 'edit');
+        loadPostReplies(postId);
+        
+      } catch (error) {
+        console.error('Error editing reply:', error);
+        alert('Failed to edit reply. Please try again.');
+      }
+    }
+
+    // Delete reply function
+    async function deleteReply(replyId, postId) {
+      if (!confirm('Are you sure you want to delete this reply? This action cannot be undone.')) {
+        return;
+      }
+      
+      try {
+        let reply;
+        if (window.firebaseDB) {
+          // Get reply from Firebase
+          const replyRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}/${replyId}`);
+          const snapshot = await new Promise((resolve, reject) => {
+            window.firebaseOnValue(replyRef, resolve, { once: true });
+          });
+          reply = snapshot.val();
+        } else {
+          // Get reply from local storage
+          const replies = JSON.parse(localStorage.getItem(`replies_${postId}`) || '[]');
+          reply = replies.find(r => r.id === replyId);
+        }
+        
+        if (!reply) {
+          alert('Reply not found.');
+          return;
+        }
+        
+        // Check permission
+        if (reply.googleId) {
+          // Google authenticated reply - check if current user is the author
+          if (!currentUser || currentUser.uid !== reply.googleId) {
+            alert('You can only delete your own replies.');
+            return;
+          }
+        } else {
+          // Guest reply - check password
+          const password = prompt('Enter password to delete this reply:');
+          if (!password) return;
+          
+          const hashedPassword = await hashPassword(password);
+          if (hashedPassword !== reply.password) {
+            alert('Incorrect password.');
+            return;
+          }
+        }
+        
+        // Delete reply
+        if (window.firebaseDB) {
+          const replyRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}/${replyId}`);
+          await window.firebaseRemove(replyRef);
+          
+          // Update reply count
+          const post = allPosts.find(p => p.id === postId);
+          const postRef = window.firebaseRef(window.firebaseDB, `communityPosts/${postId}/replies`);
+          await window.firebaseSet(postRef, Math.max(0, (post.replies || 0) - 1));
+        } else {
+          // Remove from local storage
+          const replies = JSON.parse(localStorage.getItem(`replies_${postId}`) || '[]');
+          const filteredReplies = replies.filter(r => r.id !== replyId);
+          localStorage.setItem(`replies_${postId}`, JSON.stringify(filteredReplies));
+          
+          // Update reply count in posts
+          const posts = JSON.parse(localStorage.getItem('communityPosts') || '[]');
+          const postIndex = posts.findIndex(p => p.id === postId);
+          if (postIndex !== -1) {
+            posts[postIndex].replies = Math.max(0, (posts[postIndex].replies || 0) - 1);
+            localStorage.setItem('communityPosts', JSON.stringify(posts));
+          }
+        }
+        
+        showSuccessMessage('Reply deleted successfully!', 'delete');
+        loadPostReplies(postId);
+        loadCommunityPosts();
+        
+      } catch (error) {
+        console.error('Error deleting reply:', error);
+        alert('Failed to delete reply. Please try again.');
+      }
+    }
+
+    // Edit main post function
+    async function editPost(postId) {
+      try {
+        let post = allPosts.find(p => p.id === postId);
+        if (!post) {
+          alert('Post not found.');
+          return;
+        }
+        
+        // Check permission
+        if (post.googleId) {
+          // Google authenticated post - check if current user is the author
+          if (!currentUser || currentUser.uid !== post.googleId) {
+            alert('You can only edit your own posts.');
+            return;
+          }
+        } else {
+          // Guest post - check password
+          const password = prompt('Enter password to edit this post:');
+          if (!password) return;
+          
+          const hashedPassword = await hashPassword(password);
+          if (hashedPassword !== post.password) {
+            alert('Incorrect password.');
+            return;
+          }
+        }
+        
+        // Get new title and content
+        const newTitle = prompt('Edit post title:', post.title);
+        if (newTitle === null) return;
+        if (newTitle.trim() === '') {
+          alert('Post title cannot be empty.');
+          return;
+        }
+        
+        const newContent = prompt('Edit post content:', post.content);
+        if (newContent === null) return;
+        if (newContent.trim() === '') {
+          alert('Post content cannot be empty.');
+          return;
+        }
+        
+        // Update translations if content changed
+        let updatedPost = {
+          ...post,
+          title: newTitle.trim(),
+          content: newContent.trim(),
+          edited: true,
+          editedAt: Date.now()
+        };
+
+        // Check if title or content changed, and update translations
+        if (post.title !== newTitle.trim() || post.content !== newContent.trim()) {
+          try {
+            console.log('Content changed, updating translations...');
+            const translatedTitle = await translateText(newTitle.trim(), 'en');
+            const translatedContent = await translateText(newContent.trim(), 'en');
+            
+            updatedPost.titleEn = translatedTitle;
+            updatedPost.contentEn = translatedContent;
+            
+            console.log('Translations updated successfully');
+          } catch (error) {
+            console.error('Failed to update translations:', error);
+            // Keep old translations if new ones fail
+            updatedPost.titleEn = post.titleEn;
+            updatedPost.contentEn = post.contentEn;
+          }
+        }
+        
+        if (window.firebaseDB) {
+          const postRef = window.firebaseRef(window.firebaseDB, `communityPosts/${postId}`);
+          await window.firebaseSet(postRef, updatedPost);
+        } else {
+          // Update local storage
+          const posts = JSON.parse(localStorage.getItem('communityPosts') || '[]');
+          const postIndex = posts.findIndex(p => p.id === postId);
+          if (postIndex !== -1) {
+            posts[postIndex] = updatedPost;
+            localStorage.setItem('communityPosts', JSON.stringify(posts));
+          }
+        }
+        
+        showSuccessMessage('Post updated successfully!', 'edit');
+        closePostDetail();
+        loadCommunityPosts();
+        
+      } catch (error) {
+        console.error('Error editing post:', error);
+        alert('Failed to edit post. Please try again.');
+      }
+    }
+
+    // Delete main post function
+    async function deletePost(postId) {
+      if (!confirm('Are you sure you want to delete this post? This will also delete all replies. This action cannot be undone.')) {
+        return;
+      }
+      
+      try {
+        let post = allPosts.find(p => p.id === postId);
+        if (!post) {
+          alert('Post not found.');
+          return;
+        }
+        
+        // Check permission
+        if (post.googleId) {
+          // Google authenticated post - check if current user is the author
+          if (!currentUser || currentUser.uid !== post.googleId) {
+            alert('You can only delete your own posts.');
+            return;
+          }
+        } else {
+          // Guest post - check password
+          const password = prompt('Enter password to delete this post:');
+          if (!password) return;
+          
+          const hashedPassword = await hashPassword(password);
+          if (hashedPassword !== post.password) {
+            alert('Incorrect password.');
+            return;
+          }
+        }
+        
+        // Delete post and all its replies
+        if (window.firebaseDB) {
+          const postRef = window.firebaseRef(window.firebaseDB, `communityPosts/${postId}`);
+          await window.firebaseRemove(postRef);
+          
+          // Delete all replies for this post
+          const repliesRef = window.firebaseRef(window.firebaseDB, `communityReplies/${postId}`);
+          await window.firebaseRemove(repliesRef);
+        } else {
+          // Remove from local storage
+          const posts = JSON.parse(localStorage.getItem('communityPosts') || '[]');
+          const filteredPosts = posts.filter(p => p.id !== postId);
+          localStorage.setItem('communityPosts', JSON.stringify(filteredPosts));
+          
+          // Remove all replies for this post
+          localStorage.removeItem(`replies_${postId}`);
+        }
+        
+        showSuccessMessage('Post deleted successfully!', 'delete');
+        closePostDetail();
+        loadCommunityPosts();
+        
+      } catch (error) {
+        console.error('Error deleting post:', error);
+        alert('Failed to delete post. Please try again.');
+      }
+    }
+
+    // Scroll to top
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Close modal on outside click
+    document.addEventListener('click', function(e) {
+      const newPostModal = document.getElementById('new-post-modal');
+      const postDetailModal = document.getElementById('post-detail-modal');
+      
+      if (e.target === newPostModal) {
+        closeNewPostModal();
+      }
+      if (e.target === postDetailModal) {
+        closePostDetail();
+      }
+    });
+  </script>
+</body>
+</html>
